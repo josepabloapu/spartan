@@ -1,0 +1,8 @@
+WARNING:HDLCompiler:189 - "/home/japup/Documents/ISE/MiniAlu/../../Git/spartan/lab1/source/MiniAlu.v" Line 46: Size mismatch in connection of port <Initial>. Formal port size is 16-bit while actual signal size is 32-bit.
+WARNING:HDLCompiler:189 - "/home/japup/Documents/ISE/MiniAlu/../../Git/spartan/lab1/source/MiniAlu.v" Line 57: Size mismatch in connection of port <D>. Formal port size is 8-bit while actual signal size is 4-bit.
+WARNING:HDLCompiler:189 - "/home/japup/Documents/ISE/MiniAlu/../../Git/spartan/lab1/source/MiniAlu.v" Line 58: Size mismatch in connection of port <Q>. Formal port size is 8-bit while actual signal size is 4-bit.
+WARNING:HDLCompiler:189 - "/home/japup/Documents/ISE/MiniAlu/../../Git/spartan/lab1/source/MiniAlu.v" Line 95: Size mismatch in connection of port <D>. Formal port size is 8-bit while actual signal size is 16-bit.
+
+mismatch in connection of port <Initial>
+
+UPCOUNTER_POSEDGE por default es de 16bits. Le está entrando uno de 8bits. No importa pero basta con poner que es de 8 bits y ya se quita el warning
