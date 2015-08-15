@@ -2,21 +2,19 @@
 `timescale 1ns / 1ps
 `include "Defintions.v"
 
-
 module MiniAlu
 (
  input wire Clock,
  input wire Reset,
  output wire [7:0] oLed
 
- 
 );
 
-wire [15:0]  wIP,wIP_temp;
-reg         rWriteEnable,rBranchTaken;
+wire [15:0]	wIP,wIP_temp;
+reg        	rWriteEnable,rBranchTaken;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg [15:0]   rResult;
+reg [15:0]  rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
@@ -98,8 +96,6 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
-
-
 always @ ( * )
 begin
 	case (wOperation)
@@ -118,6 +114,14 @@ begin
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult      <= wSourceData1 + wSourceData0;
+	end
+	//-------------------------------------
+	`SUB:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rResult      <= wSourceData1 - wSourceData0;
 	end
 	//-------------------------------------
 	`STO:

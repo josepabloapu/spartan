@@ -19,8 +19,9 @@ begin
 	4: oInstruction = { `STO, `R5,16'd0     };  //j
 //LOOP2:
 	5: oInstruction = { `LED ,8'b0,`R7,8'b0 };
-	6: oInstruction = { `STO ,`R1,16'h0     }; 	
-	7: oInstruction = { `STO ,`R2,16'd65000 };
+	6: oInstruction = { `STO ,`R1,16'h0     };	 	
+	7: oInstruction = { `STO ,`R2,16'd65000 };	
+	//reducing 65000 will increase speed
 //LOOP1:	
 	8: oInstruction = { `ADD ,`R1,`R1,`R3    }; 
 	9: oInstruction = { `BLE ,`LOOP1,`R1,`R2 }; 
