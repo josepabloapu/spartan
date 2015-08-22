@@ -114,9 +114,14 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RESULT
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+
+// Corrección del hazard de RaW
+// Se utiliza un comparador y se verifica si algun SourceAddr es igual al DestinarionAddr anterior
+// Si es igual permite que el source tome el resultado más rápido del destino
 assign wSourceData0 = ( wSourceAddr0 == wDestination_pre) ? wResult_pre :  wSourceData0_FromRam;
 assign wSourceData1 = ( wSourceAddr1 == wDestination_pre) ? wResult_pre : wSourceData1_FromRam;
 
+// Descomentar para observar el pipeline con el harzard de RaW
 //assign wSourceData0 = wSourceData0_FromRam;
 //assign wSourceData1 = wSourceData1_FromRam;
 
@@ -140,11 +145,13 @@ begin
 		rResult      <= wSourceData1 + wSourceData0;
 	end
 	//-------------------------------------
+	// Se agregó la función SUB (resta)
 	`SUB:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+		// Es posible hacer rResult <= SourceData1 + SourceData0 "en complemento a 2"
 		rResult      <= wSourceData1 - wSourceData0;
 	end
 	//-------------------------------------
