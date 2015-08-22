@@ -15,8 +15,8 @@ reg        	rWriteEnable,rBranchTaken;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg [15:0]  rResult;
-wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
-wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
+wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination,wDestination_pre;
+wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue,wResult_pre,wSourceData0_FromRam,wSourceData1_FromRam;
 
 ROM InstructionRom 
 (
@@ -32,8 +32,8 @@ RAM_DUAL_READ_PORT DataRam
 	.iReadAddress1( wInstruction[15:8] ),
 	.iWriteAddress( wDestination ),
 	.iDataIn(       rResult      ),
-	.oDataOut0(     wSourceData0 ),
-	.oDataOut1(     wSourceData1 )
+	.oDataOut0(     wSourceData0_FromRam ),
+	.oDataOut1(     wSourceData1_FromRam )
 );
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
@@ -94,7 +94,28 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 	.Q( oLed    )
 );
 
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_DESTINATION
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.Enable( 1'b1 ),
+	.D( wDestination ),
+	.Q( wDestination_pre)
+);
+
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RESULT
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.Enable( 1'b1 ),
+	.D( rResult ),
+	.Q( wResult_pre)
+);
+
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
+
+assign wSourceData0 = ( wSourceAddr0 == wDestination_pre) ? wResult_pre :  wSourceData0_FromRam;
+assign wSourceData1 = ( wSourceAddr1 == wDestination_pre) ? wResult_pre : wSourceData1_FromRam;
 
 always @ ( * )
 begin
