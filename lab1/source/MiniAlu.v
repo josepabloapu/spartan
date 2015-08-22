@@ -117,6 +117,9 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 assign wSourceData0 = ( wSourceAddr0 == wDestination_pre) ? wResult_pre :  wSourceData0_FromRam;
 assign wSourceData1 = ( wSourceAddr1 == wDestination_pre) ? wResult_pre : wSourceData1_FromRam;
 
+//assign wSourceData0 = wSourceData0_FromRam;
+//assign wSourceData1 = wSourceData1_FromRam;
+
 always @ ( * )
 begin
 	case (wOperation)
