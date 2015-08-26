@@ -10,7 +10,8 @@
 `define ADD   4'd5
 `define SUB   4'd6
 `define MUL   4'd7
-`define JMP   4'd8
+`define IMUL   4'd8
+`define JMP   4'd9
 
 `define R0 8'd0
 `define R1 8'd1

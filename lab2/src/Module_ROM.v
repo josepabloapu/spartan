@@ -15,16 +15,14 @@ begin
 	0: oInstruction = { `NOP , 24'd4000 	};
 	// Inicialización de los registros
 	1: oInstruction = { `STO , `R0,16'd0	};
-	2: oInstruction = { `STO , `R1,16'd2	};
+	2: oInstruction = { `STO , `R1,16'd65535	};
 	3: oInstruction = { `STO , `R2,16'd4	};	
 	4: oInstruction = { `STO , `R4,16'd10	};
 	5: oInstruction = { `STO , `R5,16'd3	};
 	6: oInstruction = { `STO , `R6,16'd5	};
-	// Operaciones de suma y resta para probar
-	// El read after write
-	7: oInstruction = { `ADD ,`R0,`R1,`R2  };
-	8: oInstruction = { `SUB ,`R4,`R0,`R6 	};
 
+	7: oInstruction = { `IMUL ,`R0,`R1,`R2  };
+	
 	default:
 		oInstruction = { `LED ,  24'b10101010 };	//NOP
 	endcase	
