@@ -1,10 +1,12 @@
 \documentclass[letterpaper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
+\usepackage{listings}
 
 \begin{document}
 Marky dice que lo hagamos así, a ver si les gusta beibis
 
+\begin{lstlisting}
 module cajitasMUL{
 
 input wire wA,wB;
@@ -37,4 +39,5 @@ begin
 	{out[7],out[6]} = (wA[3] & wB[3]) + C2 + C3; 
 end
 }
-\end{end}
+\end{lstlisting}
+\end{document}
