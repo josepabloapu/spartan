@@ -1,0 +1,127 @@
+\documentclass[10pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[ansinew]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{babelbib}
+\usepackage[T1]{fontenc}
+\usepackage[vmargin=4cm,hmargin=4cm,letterpaper]{geometry}
+\usepackage{color}
+\usepackage{framed}
+\usepackage{hyperref}
+
+\usepackage{listings}
+\definecolor{red}{RGB}{219,0,0}
+\definecolor{pink}{RGB}{255,100,100}
+\definecolor{gray}{RGB}{100,100,100}
+\lstset{
+		basicstyle=\ttfamily,
+		frame=single,
+		keywordstyle=\color{red},
+		commentstyle=\color{gray},
+		stringstyle=\color{pink},
+		tabsize=3,
+		language=verilog,
+		backgroundcolor=\color{white}}
+
+\usepackage{fancyhdr} 
+\pagestyle{fancy}
+\usepackage{lastpage}
+\lhead{Laboratorio 2}
+\chead{}
+\rhead{Anteproyecto}
+\lfoot{}
+\cfoot{}
+\rfoot{\footnotesize Page \thepage\ of \pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.4pt} 
+\renewcommand{\footrulewidth}{0.4pt} 
+
+\graphicspath{{./media/}}	%%multimedia path
+\setlength{\parindent}{0pt}
+%%*************************************************************************
+\begin{document}
+
+\begin{huge}
+\begin{center}
+\textbf{Laboratorio 2: Circuitos Combinatorios}
+\end{center}
+\end{huge}
+
+\begin{Large}
+\begin{center}
+Jose Apú (B10407), Francisco Molina (B12345), \\Marco Montero (A94000), Dennis Vargas (B16831)
+\end{center}
+\end{Large}
+
+
+\section*{Ejercicio 1}
+Se agregó e implemento la operación SMUL al experimento 1 de distintas formas, multiplicando los valores de src1 y src2 y guardando el resultado en dst. Se comparó las frecuencias, además del número de LUTs, Slices y Flip-Flops. Para este primer ejercicio se probó utilizando el operador *, tanto para multiplicación sin signo como para multiplicación con signo. \\[0.3 cm]
+Para la multiplicación sin signo se obtuvieron los resultados de las figuras \ref{freq1} y \ref{mux1}. 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/mul_max_freq.png}
+\caption{Frecuencia máxima del operador * sin signo}
+\label{freq1}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/mul_table.png}
+\caption{ LUTs, Slices y Flip-Flops del operador * sin signo}
+\label{mux1}
+\end{figure}
+\newpage
+
+Para la multiplicación con signo primero se probó que efectivamente se estaba realizando la operación correctamente con la figura  \ref{signed} y luego se obtuvieron los resultados de las figuras \ref{freq1a} y \ref{mux1a}. 
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/sim_mul_signed.png}
+\caption{Prueba multiplicación con signo}
+\label{signed}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/wo_mul_max_freq.png}
+\caption{Frecuencia máxima del operador * sin signo}
+\label{freq1a}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/wo_mul_table.png}
+\caption{ LUTs, Slices y Flip-Flops del operador * sin signo}
+\label{mux1a}
+\end{figure}
+\newpage
+
+\section*{Ejercicio 2}
+Los bloques de multiplicación del FPGA son además capaces de llevar acabo multiplicaciónes con signo (con números representados en complemento a 2). Para esto es
+necesario que la herramienta de síntesis entienda que las lineas de entrada a los puertos del multiplicador tienen signo. \\Esto se hace de la siguiente manera:
+\begin{lstlisting}
+wire [9:0] wA, wB;
+wire [31:0] R = wA * wB; //multiplicación sin signo
+wire signed [15:0] wA, wB;
+wire signed [31:0] wR = wA * wB; // multiplicación con signo
+\end{lstlisting}
+Note en la figura siguiente como el simulador reconoce la multiplicación con signo:
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/r1.png}
+\caption{}
+\label{p1}
+\end{figure}
+
+\section*{Ejercicio 3}
+
+
+\pagebreak 
+
+\section*{Ejercicio 4}
+Los warnings que s
+
+\end{document}
+%%*************************************************************************
