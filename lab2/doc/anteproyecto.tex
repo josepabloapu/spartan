@@ -64,7 +64,6 @@ Utilizar el FPGA para el desarrollo de circuitos combinatorios.
 \item Utilizar las herramientas del Xilinx ISE.
 \item Conocer y aplicar el flujo de diseno para sistemas basados en FPGA.
 \end{itemize}
-Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden multiplicar números de cualquier tamaño.
 
 \newpage
 
@@ -150,10 +149,9 @@ Esta tabla puede estar almacenada en una memoria como por ejemplo una ROM y es l
 Buscar el resultado de una multiplicación en una LUT es muy rápido, sin embargo se vuelve poco práctico cuando hay que multiplicar números muy grandes.
 
 \subsection*{Solución Propuesta}
-
 Primero se debe crear una tabla de multiplicación, que tenga las soluciones para una multiplicación entre dos datos de 4 bits.Por lo tanto se tendrá una LTU con 16 soluciones. 
 Una vez hecho esto se debe probar el método de multiplcación para dos datos de 16bits, por lo tanto se necesitará de una LTU con una mayor cantidad de datos, esta correspondría a un tamaño de 16*16.
-Además estas tablas se pueden implementar con multiplexores, mediantes simplificación lógica de las LTU. Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden
+Además estas tablas se pueden implementar con multiplexores, mediantes simplificación lógica de las LTU. Colocando varios bloques de multiplexores y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden
 multiplicar números de cualquier tamaño.
 
 \end{document}
