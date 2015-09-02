@@ -1,6 +1,7 @@
 
 `timescale 1ns / 1ps
 `include "Defintions.v"
+`include "Mul.v"
 
 module MiniAlu
 (
@@ -19,15 +20,20 @@ wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination,wDestination_pre;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue,wResult_pre,wSourceData0_FromRam,wSourceData1_FromRam;
 
 wire signed [15:0] wMula,wMulb;
-wire [3:0] wQSumResult;
+wire [7:0] wQSumResult;
 wire wCarry;
 
-assign {wCarry,wQSumResult} = {wSourceData1[3],wSourceData1[2],wSourceData1[1],wSourceData1[0] + 
-											wSourceData0[3],wSourceData0[2],wSourceData0[1],wSourceData0[0]};
+//assign {wCarry,wQSumResult} = {wSourceData1[3],wSourceData1[2],wSourceData1[1],wSourceData1[0] + 
+//											wSourceData0[3],wSourceData0[2],wSourceData0[1],wSourceData0[0]};
 assign wMula = wSourceData0;
 assign wMulb = wSourceData1;
 
-
+//MUL_CUATRO_BITS Cmul
+//(
+//	.iA({wSourceData0_FromRam[3],wSourceData0_FromRam[2],wSourceData0_FromRam[1],wSourceData0_FromRam[0]}),
+//	.iB({wSourceData1_FromRam[3],wSourceData1_FromRam[2],wSourceData1_FromRam[1],wSourceData1_FromRam[0]}),
+//	.oY(wQSumResult)
+//);
 
 ROM InstructionRom 
 (
@@ -175,7 +181,7 @@ begin
 		rResult      <= wMula * wMulb;
 	end
 	//-------------------------------------
-	// Se agregó la función MUL (multiplicación)
+	// Se agregó la función IMUL (multiplicación)
 	`IMUL:
 	begin
 		rFFLedEN     <= 1'b0;

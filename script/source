@@ -1,0 +1,22 @@
+`define 	LOOP1	7 
+`define 	LOOP2 	14 
+
+NOP
+STO		`R1		16'd0
+STO 	`R2		16'd65000
+STO 	`R3		16'd1
+STO 	`R4		16'd1000
+STO		`R5		16'd0
+STO		`R6		16'd4
+STO		`R7		16'd5 
+
+LED		`R7	
+ADD		`R3		`R1		`R3 
+BLE		`LOOP2	`R1		`R2
+
+ADD		`R5		`R5		`R3
+BLE		`LOOP1	`R1		`R2
+NOP
+
+MUL		`R7		`R0		`R6
+JMP		8'd2
