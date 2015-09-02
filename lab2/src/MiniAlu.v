@@ -22,18 +22,20 @@ wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue,wResult_pr
 wire signed [15:0] wMula,wMulb;
 wire [7:0] wQSumResult;
 wire wCarry;
-
+wire [3:0] iA,iB;
 //assign {wCarry,wQSumResult} = {wSourceData1[3],wSourceData1[2],wSourceData1[1],wSourceData1[0] + 
 //											wSourceData0[3],wSourceData0[2],wSourceData0[1],wSourceData0[0]};
 assign wMula = wSourceData0;
 assign wMulb = wSourceData1;
 
-//MUL_CUATRO_BITS Cmul
-//(
-//	.iA(wSourceData0_FromRam[3:0]),
-//	.iB(wSourceData1_FromRam[3:0]),
-//	.oY(wQSumResult)
-//);
+MUL_CUATRO_BITS Cmul
+(
+	.iA(wSourceData0[3:0]),
+	.iB(wSourceData1[3:0]),
+	.oY(wQSumResult)
+);
+
+
 
 ROM InstructionRom 
 (

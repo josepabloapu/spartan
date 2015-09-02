@@ -62,7 +62,7 @@
 module MUL_CUATRO_BITS(
 input wire [3:0] iA,
 input wire [3:0] iB,
-output [7:0] oY
+output wire [7:0] oY
 );
 wire wCA0,wCA1,wCA2,wCA3;
 wire woYA0,woYA1,woYA2,woYA3;
