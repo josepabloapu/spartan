@@ -30,8 +30,8 @@ assign wMulb = wSourceData1;
 
 //MUL_CUATRO_BITS Cmul
 //(
-//	.iA({wSourceData0_FromRam[3],wSourceData0_FromRam[2],wSourceData0_FromRam[1],wSourceData0_FromRam[0]}),
-//	.iB({wSourceData1_FromRam[3],wSourceData1_FromRam[2],wSourceData1_FromRam[1],wSourceData1_FromRam[0]}),
+//	.iA(wSourceData0_FromRam[3:0]),
+//	.iB(wSourceData1_FromRam[3:0]),
 //	.oY(wQSumResult)
 //);
 
