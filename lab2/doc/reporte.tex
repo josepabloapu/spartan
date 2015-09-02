@@ -57,26 +57,45 @@ Jose Apú (B10407), Francisco Molina (B12345), \\Marco Montero (A94000), Dennis V
 
 
 \section*{Ejercicio 1}
-Se agregó e implemento la operación SMUL al experimento 1 de distintas formas, multiplicando los valores de src1 y src2 y guardando el resultado en dst. \\ Se comparó las frecuencias, además del número de LUTs, Slices y Flip-Flops. \\ Para este primer ejercicio se probó utilizando el operador *, tanto para multiplicación sin signo como para multiplicación con signo. \begin{lstlisting}
-========================================
-Advanced HDL Synthesis Report
-Macro Statistics
-# RAMs : 2
- 9x16-bit dual-port distributed RAM : 2
-# ROMs : 1
- 16x28-bit ROM : 1
-# Multipliers : 1
- 16x16-bit registered multiplier : 1
-# Adders/Subtractors : 2
- 16-bit adder : 2
- # Counters : 1
- 16-bit up counter : 1
-# Registers : 72
- Flip-Flops : 72
-# Comparators : 1
- 16-bit comparator lessequal : 1
-========================================
-\end{lstlisting}
+Se agregó e implemento la operación SMUL al experimento 1 de distintas formas, multiplicando los valores de src1 y src2 y guardando el resultado en dst. Se comparó las frecuencias, además del número de LUTs, Slices y Flip-Flops. Para este primer ejercicio se probó utilizando el operador *, tanto para multiplicación sin signo como para multiplicación con signo. \\[0.3 cm]
+Para la multiplicación sin signo se obtuvieron los resultados de las figuras \ref{freq1} y \ref{mux1}. 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/mul_max_freq.png}
+\caption{Frecuencia máxima del operador * sin signo}
+\label{freq1}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/mul_table.png}
+\caption{ LUTs, Slices y Flip-Flops del operador * sin signo}
+\label{mux1}
+\end{figure}
+\newpage
+
+Para la multiplicación con signo primero se probó que efectivamente se estaba realizando la operación correctamente con la figura  \ref{signed} y luego se obtuvieron los resultados de las figuras \ref{freq1a} y \ref{mux1a}. 
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/sim_mul_signed.png}
+\caption{Prueba multiplicación con signo}
+\label{signed}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/wo_mul_max_freq.png}
+\caption{Frecuencia máxima del operador * sin signo}
+\label{freq1a}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=12 cm]{media/wo_mul_table.png}
+\caption{ LUTs, Slices y Flip-Flops del operador * sin signo}
+\label{mux1a}
+\end{figure}
 \newpage
 
 \section*{Ejercicio 2}
@@ -96,12 +115,12 @@ Note en la figura siguiente como el simulador reconoce la multiplicación con sig
 \label{p1}
 \end{figure}
 
-\section*{Ejercicio 2}
+\section*{Ejercicio 3}
 
 
 \pagebreak 
 
-\section*{Ejercicio 3}
+\section*{Ejercicio 4}
 Los warnings que s
 
 \end{document}
