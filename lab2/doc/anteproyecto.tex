@@ -2,11 +2,10 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage[ansinew]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{babelbib}
 \usepackage[T1]{fontenc}
-\usepackage[vmargin=4cm,hmargin=4cm,letterpaper]{geometry}
 \usepackage{color}
 \usepackage{framed}
 \usepackage{hyperref}
@@ -51,87 +50,111 @@
 
 \begin{Large}
 \begin{center}
-Jose Ap˙ (B10407), Francisco Molina (B12345), \\Marco Montero (A94000), Dennis Vargas (B16831)
+Jose Ap√∫ (B10407), Francisco Molina (B12345), \\Marco Montero (A94000), Dennis Vargas (B16831)
 \end{center}
 \end{Large}
 
 
 \section*{Objetivo General}
 Utilizar el FPGA para el desarrollo de circuitos combinatorios.
-\section*{Objetivos especÌficos}
+
+\section*{Objetivos espec√≠ficos}
 \begin{itemize}
-\item Investigar el funcionamiento de la tarjeta de desarrollo FPGA Spartan 3E
-\item Utilizar las herramientas del Xilinx ISE
-\item Conocer y aplicar el flujo de diseÒo para sistemas basados en FPGA
- \end{itemize}
- \section*{Problema}
- Agregue una operaciÛn *MUL al experimento 1, esta operaciÛn deber· multiplicar los valores de src1 y src2 y guardar el resultado en dst como se muestra a continuaciÛn.
- \begin{table}[htdp]
-\caption{default}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-Operacion & Destino & Fuente1 & Fuente2 & DescripcciÛn \\
-\hline
+\item Investigar el funcionamiento de la tarjeta de desarrollo FPGA Spartan 3E.
+\item Utilizar las herramientas del Xilinx ISE.
+\item Conocer y aplicar el flujo de diseno para sistemas basados en FPGA.
+\end{itemize}
+Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden multiplicar n√∫meros de cualquier tama√±o.
+
+\newpage
+
+\section*{Ejercicio1}
+ Agregue una operaci√≥n "*MUL" al experimento 1, esta operaci√≥n deber√° multiplicar los valores de src1 y src2 y guardar el resultado en dst como se muestra a continuaci√≥n.
+\begin{lstlisting}
+Operacion & Destino & Fuente1 & Fuente2 & Descripci√≥n \\
 *MUL & dst & Src1 & Src2 & Dst = src1 * src2  \\
-\hline
-\end{tabular}
-\end{center}
-\label{default}
-\end{table}%
+\end{lstlisting}
+
+Implemente la multiplicaci√≥n con signo usando el operador * de verilog. Anote la frecuencia que la herramienta de s√≠ntesis estima para esta parte, adem√°s el n√∫mero de LUTs, Slices y Flip-Flops. Modifique el c√≥digo en la ROM para calcular la multiplicaci√≥n de varios n√∫meros tanto con signo como sin signo y desplieguelo el resultado en los LEDs.
+
+\subsection*{Soluci√≥n Propuesta}
+Se puede resolver este problema, creando una instrucci√≥n MUL que se encargue de multiplicar dos wires y guardarlos en un registro, mediante
+el uso del operador "*".
+
+\begin{lstlisting}
+`MUL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rResult      <= wMula * wMulb;
+	end
+\end{lstlisting}
 
 \newpage
-\section*{Ejercicio 1}
-Agregue una operaciÛn SMUL al experimento 1, esta operaciÛn deber· multiplicar los valores de src1 y src2 y guardar el resultado en dst. \\ Antes de comenzar, anote la frecuencia que la herramienta de sÌntesis estima para el experimento 1, adem·s el n˙mero de LUTs, Slices y Flip-Flops. Utilice el operador * de verilog para implementar la multiplicaciÛn. \\ El Spartan 3E cuenta con bloques dedicados de multiplicaciÛn. Por defecto, la herramienta de sÌntesis intentar· usar estos bloques dedicados de multiplicaciÛn en lugar de sintetizarlos usando los bloques lÛgicos de las celdas. Observe el reporte de la herramienta de sÌntesis. 
-\begin{lstlisting}
-========================================
-Advanced HDL Synthesis Report
-Macro Statistics
-# RAMs : 2
- 9x16-bit dual-port distributed RAM : 2
-# ROMs : 1
- 16x28-bit ROM : 1
-# Multipliers : 1
- 16x16-bit registered multiplier : 1
-# Adders/Subtractors : 2
- 16-bit adder : 2
- # Counters : 1
- 16-bit up counter : 1
-# Registers : 72
- Flip-Flops : 72
-# Comparators : 1
- 16-bit comparator lessequal : 1
-========================================
-\end{lstlisting}
-\newpage
-Los bloques de multiplicaciÛn del FPGA son adem·s capaces de llevar acabo multiplicaciÛnes con signo (con n˙meros representados en complemento a 2). Para esto es
-necesario que la herramienta de sÌntesis entienda que las lineas de entrada a los puertos del multiplicador tienen signo. \\Esto se hace de la siguiente manera:
-\begin{lstlisting}
-wire [9:0] wA, wB;
-wire [31:0] R = wA * wB; //multiplicaciÛn sin signo
-wire signed [15:0] wA, wB;
-wire signed [31:0] wR = wA * wB; // multiplicaciÛn con signo
-\end{lstlisting}
-Note en la figura siguiente como el simulador reconoce la multiplicaciÛn con signo:
-\begin{figure}[hbtp]
-\centering
-\includegraphics[width=12 cm]{media/r1.png}
-\caption{}
-\label{p1}
-\end{figure}
-
-Implemente la multiplicaciÛn con signo usando el operador * de verilog. Anote la frecuencia que la herramienta de sÌntesis estima para esta parte, adem·s el
-n˙mero de LUTs, Slices y Flip-Flops. Modifique el cÛdigo en la ROM para calcular la multiplicaciÛn de varios n˙meros tanto con signo como sin signo y desplieguelo el resultado en los LEDs.
-
-\subsection*{SoluciÛn Propuesta}
-
 \section*{Ejercicio 2}
+Agregue una operaci√≥n IMUL al MiniAlu,esta operaci√≥n deber√° multiplicar los valores de
+src1 y src2 y guardar el resultado en dst.
+En esta parte se va a  implementar un multiplicador del tipo ‚Äúarray multiplier‚Äù.
 
+\subsection*{Soluci√≥n Propuesta}
+Se puede resolver este problema creando un m√≥dulo de multiplicaci√≥n que tiene como se√±ales de entrada, dos se√±ales de 4 bits A y B, y tendr√° 
+como salida, una se√±al Out de 8 bits.
+El m√≥dulo tomar√° en cuenta la siguiente informaci√≥n para solucionar el problema:
 
-\pagebreak 
+\begin{lstlisting}
+wire[n-1:0] wResult;
+wire wCarry;     
+assign {wCarry, wResult } = wA + wB
+\end{lstlisting}
+
+\newpage
+\section*{Ejercicio 3}
+Extienda el circuito del ejercicio anterior para multiplicar dos n√∫meros de 16 bits. 
+Para esto implementar esto estudie la construcci√≥n de verilog llamada ‚Äúgenerate‚Äù.Los bloques de verilog generate le permitir√°n ahorrar mucho tiempo y le 
+ense√±ar√°n como escribir c√≥digo gen√©rico para una tarea que de otra forma puede resultar muy tediosa.
+
+\subsection*{Soluci√≥n Propuesta}
+
+Se requiere reproducir el bloque antes creado para que sirva para dos n√∫meros de 16 bits por lo tanto un pseudo c√≥digo como el
+siguiente puede funcionar. 
+
+\begin{lstlisting}
+wire[2:0] wCarry[2:0];
+genvar
+  CurrentRow,  CurrentCol;
+generate
+for
+ ( CurrentCol = 0; CurrentCol < `MAX_COLS; CurrentCol = CurrentCol + 1)
+begin
+ : MUL_ROW
+...
+MODULE_ADDER  # (4) MyAdder
+(
+  .A( ... ),
+  .B( ... ),
+  .Ci(  wCarry[ CurrentRow ][ CurrentCol ] ),
+  .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
+);
+...
+end
+endgenerate
+\end{lstlisting}
+
+El bloque generate crear√° m√∫ltiples bloques multiplicadores de 8bits para poder hacer la multiplicaci√≥n de dos entradas de 16bits que requiere un resultado de 32bits.
+\newpage
 
 \section*{Ejercicio 4}
-Los warnings que s
+Agregue una operaci√≥n IMUL2 al MiniAlu, esta operaci√≥n deber√° multiplicar los valores de src1 y src2 y guardar el resultado en dst.Se va implementar un multiplicador con un algoritmo distinto.Para entender este algoritmo debe recordar una tabla de multiplicar.
+Esta tabla puede estar almacenada en una memoria como por ejemplo una ROM y es lo que se conoce como una LUT (Look up Table).
+Buscar el resultado de una multiplicaci√≥n en una LUT es muy r√°pido, sin embargo se vuelve poco pr√°ctico cuando hay que multiplicar n√∫meros muy grandes.
+
+\subsection*{Soluci√≥n Propuesta}
+
+Primero se debe crear una tabla de multiplicaci√≥n, que tenga las soluciones para una multiplicaci√≥n entre dos datos de 4 bits.Por lo tanto se tendr√° una LTU con 16 soluciones. 
+Una vez hecho esto se debe probar el m√©todo de multiplcaci√≥n para dos datos de 16bits, por lo tanto se necesitar√° de una LTU con una mayor cantidad de datos, esta correspondr√≠a a un tama√±o de 16*16.
+Adem√°s estas tablas se pueden implementar con multiplexores, mediantes simplificaci√≥n l√≥gica de las LTU. Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden
+multiplicar n√∫meros de cualquier tama√±o.
 
 \end{document}
 %%*************************************************************************
