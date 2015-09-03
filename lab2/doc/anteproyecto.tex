@@ -64,23 +64,20 @@ Utilizar el FPGA para el desarrollo de circuitos combinatorios.
 \item Utilizar las herramientas del Xilinx ISE.
 \item Conocer y aplicar el flujo de diseno para sistemas basados en FPGA.
 \end{itemize}
-Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden multiplicar números de cualquier tamaño.
 
 \newpage
 
 \section*{Ejercicio1}
  Agregue una operación 'iMUL' al experimento 1, esta operación deberá multiplicar los valores de src1 y src2 y guardar el resultado en dst como se muestra a continuación.
 \begin{lstlisting}
-Operacion & Destino & Fuente1 & Fuente2 & Descripcion \\
-iMUL & dst & Src1 & Src2 & Dst = src1 * src2  \\
+Operacion & Destino & Fuente1 & Fuente2 & Descripcion 
+iMUL 	 & dst    & Src1   & Src2   & Dst = src1 * src2  
 \end{lstlisting}
 
 Implemente la multiplicación con signo usando el operador * de verilog. Anote la frecuencia que la herramienta de síntesis estima para esta parte, además el número de LUTs, Slices y Flip-Flops. Modifique el código en la ROM para calcular la multiplicación de varios números tanto con signo como sin signo y desplieguelo el resultado en los LEDs.
 
 \subsection*{Solución Propuesta}
-Se puede resolver este problema, creando una instrucción MUL que se encargue de multiplicar dos wires y guardarlos en un registro, mediante
-el uso del operador "*".
-
+Se puede resolver este problema, creando una instrucción MUL que se encargue de multiplicar los datos provenientes de dos wires; wMula,wMulb; mediante el uso del operador * y los guarde en un registro rResult.
 \begin{lstlisting}
 `MUL:
 	begin
@@ -98,8 +95,7 @@ src1 y src2 y guardar el resultado en dst.
 En esta parte se va a  implementar un multiplicador del tipo “array multiplier”.
 
 \subsection*{Solución Propuesta}
-Se puede resolver este problema creando un módulo de multiplicación que tiene como señales de entrada, dos señales de 4 bits A y B, y tendrá 
-como salida, una señal Out de 8 bits.
+Este problema puede ser resuelto creando un módulo de multiplicación que tiene como señales de entrada, dos señales de 4 bits A y B, y tendrá como salida, una señal Out de 8 bits.
 El módulo tomará en cuenta la siguiente información para solucionar el problema:
 
 \begin{lstlisting}
@@ -125,7 +121,8 @@ genvar
   CurrentRow,  CurrentCol;
 generate
 for
- ( CurrentCol = 0; CurrentCol < `MAX_COLS; CurrentCol = CurrentCol + 1)
+ ( CurrentCol = 0; CurrentCol < `MAX_COLS; 
+CurrentCol = CurrentCol + 1)
 begin
  : MUL_ROW
 ...
@@ -141,7 +138,7 @@ end
 endgenerate
 \end{lstlisting}
 
-El bloque generate creará múltiples bloques multiplicadores de 8bits para poder hacer la multiplicación de dos entradas de 16bits que requiere un resultado de 32bits.
+El bloque generate creará múltiples bloques multiplicadores de 8bits para poder hacer la multiplicación de dos entradas de 16bits, se requiere además un resultado de 32bits.
 \newpage
 
 \section*{Ejercicio 4}
@@ -150,11 +147,11 @@ Esta tabla puede estar almacenada en una memoria como por ejemplo una ROM y es l
 Buscar el resultado de una multiplicación en una LUT es muy rápido, sin embargo se vuelve poco práctico cuando hay que multiplicar números muy grandes.
 
 \subsection*{Solución Propuesta}
-
 Primero se debe crear una tabla de multiplicación, que tenga las soluciones para una multiplicación entre dos datos de 4 bits.Por lo tanto se tendrá una LTU con 16 soluciones. 
 Una vez hecho esto se debe probar el método de multiplcación para dos datos de 16bits, por lo tanto se necesitará de una LTU con una mayor cantidad de datos, esta correspondría a un tamaño de 16*16.
-Además estas tablas se pueden implementar con multiplexores, mediantes simplificación lógica de las LTU. Colocando varios bloques de multiplexores como el que se muestra y sumando los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden
+Además estas tablas se pueden implementar con multiplexores, mediantes simplificación lógica de las LTU. Si se colocan varios bloques de multiplexores y si se suman los resultados parciales corridos a la izquierda el numero apropiado de posiciones, se pueden
 multiplicar números de cualquier tamaño.
+Una propuesta por lo tanto sería crear la tabla de 16bits, simplificar la tabla como lo hace el ejemplo de proyecto y crear la lógica de multiplexores que se requiere para hacer la multiplicación.
 
 \end{document}
 %%*************************************************************************
