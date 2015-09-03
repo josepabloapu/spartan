@@ -12,31 +12,21 @@ always @ ( iAddress )
 begin
 	case (iAddress)
 
-	0: oInstruction = { `NOP ,24'd4000    };
-	// Inicialización de registros
-	1: oInstruction = { `STO , `R7,16'b0001 };
-	2: oInstruction = { `STO ,`R3,16'h1     }; 
-	3: oInstruction = { `STO, `R4,16'd1000 };
-	4: oInstruction = { `STO, `R5,16'd0     };  //j
-//LOOP2:
-	// Led toma el valor de R7
-	5: oInstruction = { `LED ,8'b0,`R7,8'b0 };
-	6: oInstruction = { `STO ,`R1,16'h0     };
-	// Al cambiar 65000 por un valor menor se aumento la velocida del contador	 	
-	// Linea original: -- 7: oInstruction = { `STO ,`R2,16'd65000 };
-	7: oInstruction = { `STO ,`R2,16'd500 };
-//LOOP1:	
-	8: oInstruction = { `ADD ,`R1,`R1,`R3    }; 
-	9: oInstruction = { `BLE ,`LOOP1,`R1,`R2 }; 
-	
-	10: oInstruction = { `ADD ,`R5,`R5,`R3    };
-	11: oInstruction = { `BLE ,`LOOP2,`R5,`R4 };	
-	12: oInstruction = { `NOP ,24'd4000       };
-	// Se le va sumando a R7 una unida cada ciclo (R7++) 
-	13: oInstruction = { `ADD ,`R7,`R7,`R3    };
-	14: oInstruction = { `JMP ,  8'd2,16'b0   };
+	0: oInstruction = { `NOP , 24'd4000 	};
+	// Inicialización de los registros
+	1: oInstruction = { `STO , `R0,16'd0	};
+	2: oInstruction = { `STO , `R1,16'd2	};
+	3: oInstruction = { `STO , `R2,16'd4	};	
+	4: oInstruction = { `STO , `R4,16'd10	};
+	5: oInstruction = { `STO , `R5,16'd3	};
+	6: oInstruction = { `STO , `R6,16'd5	};
+	// Operaciones de suma y resta para probar
+	// El read after write
+	7: oInstruction = { `ADD ,`R0,`R1,`R2  };
+	8: oInstruction = { `SUB ,`R4,`R0,`R6 	};
+
 	default:
-		oInstruction = { `LED ,  24'b10101010 };		//NOP
+		oInstruction = { `LED ,  24'b10101010 };	//NOP
 	endcase	
 end
 	
