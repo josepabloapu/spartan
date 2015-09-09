@@ -15,27 +15,18 @@ wire [15:0]	wIP,wIP_temp;
 reg        	rWriteEnable,rBranchTaken;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg [15:0]  rResult;
+reg  [15:0] rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination,wDestination_pre;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue,wResult_pre,wSourceData0_FromRam,wSourceData1_FromRam;
 
 wire signed [15:0] wMula,wMulb;
 wire [7:0] wQSumResult;
-wire wCarry;
-wire [3:0] iA,iB;
-//assign {wCarry,wQSumResult} = {wSourceData1[3],wSourceData1[2],wSourceData1[1],wSourceData1[0] + 
-//											wSourceData0[3],wSourceData0[2],wSourceData0[1],wSourceData0[0]};
+wire [15:0] wMuxRes0,wMuxRes1,wMuxRes2,wMuxRes3;
 assign wMula = wSourceData0;
 assign wMulb = wSourceData1;
 
-MUL_CUATRO_BITS Cmul
-(
-	.iA(wSourceData0[3:0]),
-	.iB(wSourceData1[3:0]),
-	.oY(wQSumResult)
-);
 
-
+//////////////////////////////////////
 
 ROM InstructionRom 
 (
@@ -131,6 +122,99 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RESULT
 	.Q( wResult_pre)
 );
 
+
+/////////////////////////////
+//Ejercicio 2
+MUL_CUATRO_BITS Cmul
+(
+	.iA(wSourceData0[3:0]),
+	.iB(wSourceData1[3:0]),
+	.oY(wQSumResult)
+);
+
+//////////////////////////////////////////
+//Ejercicio 3
+
+parameter n=8;//numero de bits nxn a multiplicar
+wire [n:0] wCarryTable[n-2:0];  
+wire [n:0] wYout[n-2:0];
+wire [15:0] wA,wB;
+wire [(2*n-1):0] Resultado;
+
+assign Resultado[0]=wSourceData0[0]&wSourceData1[0];
+assign wA=wSourceData0;
+assign wB=wSourceData1;
+
+genvar CurrentCol,CurrentRow,i;
+generate
+	for(CurrentRow=0;CurrentRow<(n-1);CurrentRow=CurrentRow+1)
+		begin: Loop1
+		assign wCarryTable[CurrentRow][0]=0;
+		for(CurrentCol=0;CurrentCol<n;CurrentCol=CurrentCol+1)
+			begin:Loop2
+			if(CurrentRow==0)//Para la primera fila
+				begin:if1
+				assign  wA[n]=0;//La entrada cero del sumador la ultima columna 
+				ADDER myadd(
+				.iA(wA[CurrentCol+1]&wB[CurrentRow]),
+				.iB(wA[CurrentCol]&wB[CurrentRow+1]),
+				.iCarry(wCarryTable[CurrentRow][CurrentCol]),
+				.oCarry(wCarryTable[CurrentRow][CurrentCol+1]),
+				.oY(wYout[CurrentRow][CurrentCol])
+				);
+				end
+			else//Las otras filas
+				begin:if1
+				assign wYout[CurrentRow-1][n]=wCarryTable[CurrentRow-1][n];
+				ADDER myadd1(
+				.iA(wA[CurrentCol]&wB[CurrentRow+1]),
+				.iB(wYout[CurrentRow-1][CurrentCol+1]),
+				.iCarry(wCarryTable[CurrentRow][CurrentCol]),
+				.oCarry(wCarryTable[CurrentRow][CurrentCol+1]),
+				.oY(wYout[CurrentRow][CurrentCol])
+				);
+				end
+			end//Finaliza lazo interno.
+
+//Para llenar los bit de "Resultado" independientemente del numero de bits "nxn" a multiplicar.	
+		assign Resultado[CurrentRow+1]=wYout[CurrentRow][0];
+		if(CurrentRow==(n-2))
+			begin:if3
+			for(i=1;i<n;i=i+1)
+				begin:loop3
+				assign Resultado[(CurrentRow+1+i)]=wYout[CurrentRow][i];
+				end
+			end
+		
+	end//Finaliza lazo externo
+assign Resultado[(2*n-1)]=wCarryTable[n-2][n];//Ultimo bit de acarreo	
+endgenerate
+
+/////////////////////////////////////////////
+//Ejercicio 4(Multiplica numeros de 8 bits)
+MUL_MUX Mux0(
+.iA(wSourceData0[7:0]),
+.iB(wSourceData1[7:6]),
+.oOut(wMuxRes0)
+);
+MUL_MUX Mux1(
+.iA(wSourceData0[7:0]),
+.iB(wSourceData1[5:4]),
+.oOut(wMuxRes1)
+);
+MUL_MUX Mux2(
+.iA(wSourceData0[7:0]),
+.iB(wSourceData1[3:2]),
+.oOut(wMuxRes2)
+);
+MUL_MUX Mux3(
+.iA(wSourceData0[7:0]),
+.iB(wSourceData1[1:0]),
+.oOut(wMuxRes3)
+);
+///////////////////////////////
+
+
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
 
@@ -165,7 +249,7 @@ begin
 	end
 	//-------------------------------------
 	// Se agregó la función SUB (resta)
-	`SUB:
+	`SUB: 
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
@@ -181,6 +265,7 @@ begin
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult      <= wMula * wMulb;
+		
 	end
 	//-------------------------------------
 	// Se agregó la función IMUL (multiplicación)
@@ -191,6 +276,15 @@ begin
 		rWriteEnable <= 1'b1;
 		rResult <= wQSumResult; 
 		end
+	//-------------------------------------
+	//-------------------------------------
+	// Se agregó la función SMUL (multiplicación)
+	`SMUL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rResult <= (wMuxRes0<<6)+(wMuxRes1<<4)+(wMuxRes2<<2)+wMuxRes3;		end
 	//-------------------------------------
 	`STO:
 	begin

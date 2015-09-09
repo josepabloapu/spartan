@@ -19,12 +19,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module MUL_CUATRO_BITS(
-input wire [3:0] iA,
-input wire [3:0] iB,
-output wire [7:0] oY
+	input wire [3:0] iA,
+	input wire [3:0] iB,
+	output wire [7:0] oY
 );
+
 wire wCA0,wCA1,wCA2,wCA3;
 wire woYA0,woYA1,woYA2,woYA3;
 
@@ -50,6 +50,7 @@ assign {wCC1,woYC1} =woYB2+(iA[1]&iB[3])+wCC0;
 assign {wCC2,woYC2} =woYB3+(iA[2]&iB[3])+wCC1;
 assign {wCC3,woYC3} =wCB3+(iA[3]&iB[3])+wCC2;
 assign oY ={wCC3,woYC3,woYC2,woYC1,woYC0,woYB0,woYA0,(iA[0]&iB[0])};
+
 endmodule
 
 
@@ -57,11 +58,29 @@ endmodule
 ///////////////////////////
 //Sumador de dos bits con acarreo
 module ADDER(
-input wire iA,
-input wire iB,
-input wire iCarry,
-output wire oCarry,
-output wire oY
+	input wire iA,
+	input wire iB,
+	input wire iCarry,
+	output wire oCarry,
+	output wire oY
 );
 assign {oCarry,oY}=iA+iB+iCarry;
 endmodule 
+
+module MUL_MUX(
+	input wire [1:0] iB,
+	input wire [7:0] iA,
+	output reg [15:0] oOut
+);
+
+always @(iB)
+begin
+	case (iB)
+		2'b00: oOut=0;
+		2'b01: oOut=iA;
+		2'b10: oOut=(iA<<1);
+		2'b11: oOut=(iA<<1)+iA;
+	endcase
+end
+
+endmodule
