@@ -1,18 +1,18 @@
-`define 	LOOP1	7 
-`define 	LOOP2 	14 
+`define 	LOOP1	8 
+`define 	LOOP2 5
 
 NOP
-STO	`R0		16'd2
-STO	`R6		16'd4
-STO	`R7		16'd1
-STO 	`R3		16'd1
-STO 	`R4		16'd1
-STO	`R5		16'd0
+STO	`R0		16'd8
+STO	`R6		16'd9
+STO	`R7		16'b0001
+STO	`R3		16'h1
+STO	`R4		16'd1000
+STO 	`R5		16'd0
 LED	`R7
-STO	`R1		16'd0
-STO 	`R2		16'd6
-ADD	`R3		`R1		`R3 
-BLE	`LOOP2	`R1		`R2
+STO	`R1		16'h0
+STO 	`R2		16'd500
+ADD	`R1		`R1		`R3 
+BLE	`LOOP1	`R1		`R2
 ADD	`R5		`R5		`R3
 BLE	`LOOP1	`R1		`R2
 NOP

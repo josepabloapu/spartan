@@ -15,7 +15,7 @@ wire [15:0]	wIP,wIP_temp;
 reg        	rWriteEnable,rBranchTaken;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg  [16:0]  rResult;
+reg  [15:0] rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination,wDestination_pre;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue,wResult_pre,wSourceData0_FromRam,wSourceData1_FromRam;
 
