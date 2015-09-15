@@ -1,0 +1,412 @@
+\documentclass[10pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{babelbib}
+\usepackage{color}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{listings}
+
+
+\definecolor{red}{RGB}{219,0,0}
+\definecolor{pink}{RGB}{255,100,100}
+\definecolor{gray}{RGB}{100,100,100}
+\lstset{
+		basicstyle=\ttfamily,
+		frame=single,
+		keywordstyle=\color{red},
+		commentstyle=\color{gray},
+		stringstyle=\color{pink},
+		tabsize=3,
+		language=verilog,
+		backgroundcolor=\color{white}}
+
+\usepackage{fancyhdr} 
+\pagestyle{fancy}
+\usepackage{lastpage}
+\lhead{Laboratorio 2}
+\chead{}
+\rhead{Anteproyecto}
+\lfoot{}
+\cfoot{}
+\rfoot{\footnotesize Page \thepage\ of \pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.4pt} 
+\renewcommand{\footrulewidth}{0.4pt} 
+
+\graphicspath{{../media/}}	%%multimedia path
+\setlength{\parindent}{0pt}
+%%*************************************************************************
+\begin{document}
+
+\begin{huge}
+\begin{center}
+\textbf{Laboratorio 2: Circuitos Combinatorios}
+\end{center}
+\end{huge}
+
+\begin{Large}
+\begin{center}
+Jose Apú (B10407), Francisco Molina (B12345), \\Marco Montero (A94000), Dennis Vargas (B16831)
+\end{center}
+\end{Large}
+
+
+\section*{Objetivo General}
+Utilizar el FPGA para el desarrollo de circuitos combinatorios.
+
+\section*{Objetivos específicos}
+\begin{itemize}
+\item Investigar el funcionamiento de la tarjeta de desarrollo FPGA Spartan 3E.
+\item Utilizar las herramientas del Xilinx ISE.
+\item Conocer y aplicar el flujo de diseno para sistemas basados en FPGA.
+\end{itemize}
+
+\newpage
+
+\section*{Ejercicio1}
+Implemente una máquina de estados que permita desplegar el siguiente texto en la pantalla LCD del Spartan 3E
+\begin{lstlisting}
+	"Hola"
+\end{lstlisting}
+Primeramente deberá escribir un código de verilog de tal manera que la herramienta de síntesis entienda que se trata de una máquina de estados. Hay varias maneras de hacer esto, un ejemplo es el siguiente:
+
+\begin{lstlisting}
+`timescale 1ns / 1ps
+`define STATE_RESET                 0
+`define STATE_POWERON_INIT_0        1
+`define STATE_POWERON_INIT_1        2
+`define STATE_POWERON_INIT_2        3
+`define STATE_POWERON_INIT_3        4 
+`define STATE_POWERON_INIT_4        5
+`define STATE_POWERON_INIT_5        6
+`define STATE_POWERON_INIT_6        7
+`define STATE_POWERON_INIT_7        8
+`define STATE_POWERON_INIT_8        9
+module Module_LCD_Control
+(
+input wire Clock,
+input wire Reset,
+output wire oLCD_Enabled,
+output reg oLCD_RegisterSelect,
+//0=Command, 1=Data
+output wire oLCD_StrataFlashControl,
+output wire oLCD_ReadWrite,
+output reg[3:0] oLCD_Data
+);
+reg rWrite_Enabled
+assign oLCD_ReadWrite = 0;
+
+`RET:
+begin
+rFFLedEN <= 1'b0;
+rWriteEnable <= 1'b0;
+rResult <= 0;
+rFlagCALL <= 1'b0;
+rBranchTaken <= 1'b1;
+end
+
+wire[27:0] wInstruction, wInstruction_Pre;
+RAM_DUAL_READ_PORT DataRam
+(
+.Clock(Clock),
+.iWriteEnable(rWriteEnable) ,
+.iReadAddress0 ( wInstruction_Pre[7:0]),
+.iReadAddress1 ( wInstruction_Pre[15:8]),
+.iWriteAddress ( wDestination_Pre),
+.iDataIn(rResult),
+.oDataOut0(wSourceData0),
+.oDataOut1( wSourceData1)
+);
+assign wInstruction_Pre[7:0] =
+(wOperation==`RET)?8`b7:wInstruction;
+assign wIPInitialValue = (Reset)?8'b0: 
+((wOperation==`RET)? wSourceData0:wDestination);
+
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 4 ) FFDM
+(
+.Clock(Clock),
+.Reset(Reset),
+.Enable(1'b1),
+.D(wOperation),
+.Q(wOperationPost)
+);
+
+assign oLCD_StrataFlashControl = 1;
+//StrataFlash disabled. Full read/write access to LCD
+reg [7:0] rCurrentState,rNextState;
+reg [31:0] rTimeCount;
+reg rTimeCountReset;
+wire wWriteDone;
+
+//Next State and delay logic
+always @ ( posedge Clock )
+=
+if (Reset)
+begin
+rCurrentState = `STATE_RESET;
+rTimeCount    <= 32'b0;
+end
+else
+begin
+if (rTimeCountReset)
+rTimeCount <= 32'b0;
+else
+rTimeCount <= rTimeCount + 32'b1;
+rCurrentState <= rNextState;
+end
+end
+
+//Current state and output logic
+always @ ( * )
+begin
+case (rCurrentState)
+
+`STATE_RESET:
+begin
+rWrite_Enabled = 1'b0;
+oLCD_Data = 4'h0;
+oLCD_RegisterSelect = 1'b0; 
+rTimeCountReset = 1'b0;
+rNextState = `STATE_POWERON_INIT_0;
+end
+
+
+//Wait 15 ms or longer. 
+//The 15 ms interval is 750,000 clock cycles at 50 MHz.
+
+`STATE_POWERON_INIT_0:
+begin
+rWrite_Enabled = 1'b0;
+oLCD_Data = 4'h0;
+oLCD_RegisterSelect  = 1'b0; //these are commands
+if (rTimeCount > 32'd750000 )
+begin
+rTimeCountReset  = 1'b1;
+rNextState = `STATE_POWERON_INIT_1;
+end
+else
+begin
+rTimeCountReset  = 1'b0;
+rNextState = `STATE_POWERON_INIT_0;
+end
+end
+
+//Write SF_D<11:8> = 0x3, 
+//pulse LCD_E High for 12 clock cycles
+
+`STATE_POWERON_INIT_1:
+begin
+rWrite_Enabled = 1'b1;
+oLCD_Data  = 4'h3;
+oLCD_RegisterSelect = 1'b0; //these are commands
+rTimeCountReset = 1'b1;
+if ( wWriteDone )
+rNextState = `STATE_POWERON_INIT_2;
+else
+rNextState = `STATE_POWERON_INIT_1;
+end
+
+
+//Wait 4.1 ms or longer, 
+//which is 205,000 clock cycles at 50 MHz.
+
+`STATE_POWERON_INIT_2:
+begin
+rWrite_Enabled = 1'b0;
+oLCD_Data = 4'h3;
+oLCD_RegisterSelect = 1'b0; //these are commands
+if (rTimeCount > 32'd205000 )
+begin
+rTimeCountReset = 1'b1;
+rNextState = `STATE_POWERON_INIT_3;
+end
+else
+begin
+rTimeCountReset = 1'b0;
+rNextState = `STATE_POWERON_INIT_2;
+end
+end
+
+default:
+begin
+rWrite_Enabled = 1'b0;
+oLCD_Data = 4'h0;
+oLCD_RegisterSelect = 1'b0;
+rTimeCountReset  = 1'b0;
+rNextState = `STATE_RESET;
+end
+
+endcase
+end
+endmodule
+
+\end{lstlisting}
+
+El código anterior no tiene todos los estados necesarios para configurar el LCD ni para
+desplegar el texto, sin embargo le dará una idea de una posible implentación de una máquina de estados. Aquí la lógica de próximo estado y de salida estan combinadas en el mismo bloque always.
+Es muy importante que la herramienta de síntesis entienda que se está descirbiendo una máquina de estados y no otro circuito.
+
+Implemente una máquina de estados que imprima el texto “Hola Mundo” en la pantalla LCD. Para esto deberá observar la documentación de la tarjerta de desarrollo del spartan 3E, la cual se encuentra disponible en le sitio web del curso. Es obligatorio que el reporte de  la herramienta de síntesis muestre que su circuito es una maquina de estados como en el ejemplo anterior.
+
+\subsection*{Solución Propuesta}
+
+Para solucionar este problema primero se debe analizar el código en el enunciado y analizar la documentación de la tarjeta. Tomando los estados presentes en el código se deben añadir un par de estados más.
+
+Los estados pueden ser:
+\begin{itemize}
+\item Espere 15ms o más. Esto es equivalente a 750k ciclos de reloj a 50MHz.
+\item Escriba \$3 en $SF_D<11:8>$, LCD\_E debe estar en alto durante 12 ciclos.
+\item Espere 4.1ms o más. Esto es equivalente a 205k ciclos de reloj.
+\item Escriba \$3 en $SF_D<11:8>$, LCD\_E debe estar en alto durante 12 ciclos.
+\item Espere 100us o más. Esto es equivalente a 5k ciclos de reloj.
+\item Escriba \$3 en $SF_D<11:8>$, LCD\_E debe estar en alto durante 12 ciclos.
+\item Espere 40us o más. Esto es equivalente a 2k ciclos de reloj.
+\item Escriba \$2 en $SF_D<11:8>$, LCD\_E debe estar en alto durante 12 ciclos.
+\item Espere 40us o más. Esto es equivalente a 2k ciclos de reloj.
+\end{itemize}
+Luego se debe comprobar que la herramienta de sintésis infiera una máquina de estados. Además se códificar la frase "Hola Mundo".
+
+
+\newpage
+\section*{Ejercicio 2}
+Configurar la LCD y desplegar texto son cosas por naturaleza secuenciales. Dado que todas las operaciones de la MiniALU del experimento-2 duran 2 ciclos de reloj, es posible
+utilizarla para desplegar el texto.
+Implemente una lógica en la mini ALU que configure el LCD, esto lo podrá hacer mediante código en la ROM o usando alguna otra forma que crea conveniente.
+Agregue las siguientes instrucciones a la MiniALU para escribir un carácter a la vez, primero los 4 bits altos y luego los 4 bits más bajos.
+La instrucción puede tener el siguiente formato:
+
+\begin{lstlisting}
+LCD <Destino Nulo> , < Fuente1 >, <Fuente2 Nulo>
+\end{lstlisting}
+Esta instrucción debe mandar al LCD solo los 4 bits más significativos de Fuente1 e ignorar el resto  de la palabra.Dado que la LCD acepta 
+4 bits a la vez, deberá implementar una instrucción de corrimiento a la izquierda a la cual llamará SHL.
+\begin{lstlisting}
+SHL <Destino > , < Fuente1 >, <Fuente2>
+\end{lstlisting}
+
+La Fuente 1 deberá ser el registro que desea correr a la izquierda y la fuente 2 deberá ser el número de bits que desea correr. 
+
+\subsection*{Solución Propuesta}
+Una vez que se configura correctamente la pantalla del ejercicio 1 se debe agregar el siguiente código para la solución de la segunda pregunta. En el "case" de MiniAlu.v agregar las siguientes instrucciones:
+
+\begin{lstlisting}
+`SHL:
+begin
+rFFLedEN 1'b0;
+rBranchTaken<=1'b0;
+rWriteEnable<=1'b1;
+rResult<=wSourceData0<<wInstruction[3:0];
+//Corre los 4 primeros bits para mandarlos a la pantalla
+end
+`LCD:
+begin
+rFFledEN <= 1'b1;
+rWriteEnable <= 1'b0;
+// Encienda la pantalla <= 1'b1;
+rResult <= wSourceData0 << wInstruction[7:0];
+rBranchTaken <= 1'b0;
+rSubrutineCall <= 1'b0;
+rRTS <= 1'b0;
+end
+\end{lstlisting}
+
+En Definitions.v se agregan los opcodes
+
+\begin{lstlisting}
+`define SHL 4'd11
+`define LCD 4'd12
+\end{lstlisting}
+
+En ModuleROM.v agregar las siguientes instrucciones:
+
+\begin{lstlisting}
+7: oInstruction = {`STO,`R1,16'b0};
+8: oInstruction = {`LCD,8'b0,`R1,8'b0};
+9: oInstruction = {`NOP,24'd4000 };
+10: oInstruction = {`SHL,`R1,`R1, 8'd4 };
+11: oInstruction = {`LCD,8'b0,`R1,8'b0 };
+12: oInstruction = {`NOP,24'd4000 };
+\end{lstlisting}
+
+\section*{Ejercicio 3}
+
+Escribir los caracteres del ejercicio anterior hubiera sido más sencillo si la miniALU soportara llamados a  sub-rutinas.
+Modifique la miniALU de manera que soporte subrutinas. Para esto puede implementar una instrucción CALL y una instrucción RET. 
+
+Note que la instrucción CALL es similar a la operación JMP con la diferencia de que deberá guardar la dirección de retorno en un Flip-Flop.
+La instrucción  RET tambien es similar a la operación JMP con la diferencia de que siempre deberá saltar a la direción de retorno previamente salvada por CALL.
+Dado que la Mini-ALU no cuenta con una pila, puede usar cualquiera de los registros R1,...,R7 para pasar los parametros a la función y devolver el valor de retorno.
+Observe el siguiente ejemplo en pseudo-código que implementa un sub-rutina que suma R1 + R2 y devuelve el valor en R3
+
+\subsection*{Solución Propuesta}
+
+Para implementar este ejercicio se debería agregar a MiniAlu.v el siguiente código:
+
+\begin{lstlisting}
+`CALL:
+begin
+ rFFLedEN <= 1'b0;
+ rWriteEnable <= 1'b0;
+ rResult <= 0;
+ rBranchTaken <= 1'b1;
+end
+\\------
+`RET:
+begin
+rFFLedEN <= 1'b0;
+rWriteEnable <= 1'b0;
+rResult <= 0;
+rBranchTaken <= 1'b1;
+end
+\end{lstlisting}
+
+La implementación es muy similar a la instrucción JMP utilizada anteriormente . Para la instrucción CALL la
+posición de memoria a la que debe regresar debe ser conocida y definida.
+
+La instricción RET tambien es muy similar a JUMP, pero siempre salta a la dirección almacenada en el registro 7 (R7), por lo cual para imprementarla se debe utilizar un flip flop que retiene la instrucción (wOperation) un ciclo mientras la memoria trae el dato en R7 (la dirección de retorno), debido a que solamente cuando se ejecuta la instrucción RET se debe poner en el puntero de dirección el contenido del registro 7 un multiplexor se encarga de verificar esto. A continuación se muestran las lineas que se agregaron y las que se modificaron.
+
+\begin{lstlisting}
+`RET:
+begin
+rFFLedEN <= 1'b0;
+rWriteEnable <= 1'b0;
+rResult <= 0;
+rFlagCALL <= 1'b0;
+rBranchTaken <= 1'b1;
+end
+
+wire[27:0] wInstruction, wInstruction_Pre;
+RAM_DUAL_READ_PORT DataRam
+(
+.Clock(Clock),
+.iWriteEnable(rWriteEnable),
+.iReadAddress0(wInstruction_Pre[7:0]),
+.iReadAddress1(wInstruction_Pre[15:8]),
+.iWriteAddress(wDestination_Pre),
+
+.iDataIn(rResult),
+.oDataOut0(wSourceData0),
+.oDataOut1(wSourceData1)
+);
+assign wInstruction_Pre[7:0]=(wOperation==`RET)?8'b7:
+wInstruction;
+assign wIPInitialValue=(Reset)?8'b0:
+((wOperation==`RET)?wSourceData0:wDestination);
+
+FFD_POSEDGE_SYNCRONOUS_RESET#(4)FFDM
+(
+.Clock(Clock),
+.Reset(Reset),
+.Enable(1'b1),
+.D(wOperation),
+.Q(wOperationPost)
+);
+\end{lstlisting}
+
+\end{document}
+%%*************************************************************************
