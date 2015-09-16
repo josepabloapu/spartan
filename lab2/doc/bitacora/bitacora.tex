@@ -119,9 +119,63 @@ Note en la figura siguiente como el simulador reconoce la multiplicación con sig
 
 
 \pagebreak 
-
 \section*{Ejercicio 4}
-Los warnings que s
+Luego de una serie de pruebas se determinó cual es la cantidad de espacios que se debe desplazar cada resultado parcial para multiplicar números con más de 2 bits. En la figura \ref{p2} se muestra la estrucutura implementada para multiplicar números de 8 bits y siguiendo la misma lógica se puede obtener fácilmente una función para multiplicar 16 bits o inclusive más.
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=14 cm]{media/Muxed.png}
+\caption{Multiplicador 8 bits con LUT}
+\label{p2}
+\end{figure}
+
+\section*{Ejercicio 5}
+Para implementar un multiplexor que codifique una LUT de 4 bits, se debe cumplir la tabla de verdad del cuadro \ref{t1}. Si se observa con detenimiento en la tabla, se logra identificar un patrón en el resultado de las multiplicaciones. 
+Una ventaja de utilizar este multiplexor es que se necesitarán menos módulos para multiplicar números de mayor cantidad de bits. Por ejemplo, con el mux implementado en el ejercicio anterior para multiplicar números de 8 bits se necesitrían 4 multiplexores, mientras que utlizando este nuevo multiplexor, solamente es necesario utilizar 2.
+Una posible desventaja es que a la hora de multiplicar números mayores a 4 bits, se puede tornar un poco engorroso identificar cuantos posiciones a la izquierda se debe desplazar cada subresultado de 4 bits.
+
+\begin{table}[h!]
+\centering 
+\caption{Tabla de verdad de Mux para LTU de 4 bits}
+\begin{tabular}{cl}
+\hline
+ B(4 bits) &        AxB \\
+\hline
+      0000 &          0 \\
+
+      0001 &          A \\
+
+      0010 &       A$<<$1 \\
+
+      0011 &   (A$<<$1)+A \\
+
+      0100 &       A$<<$2 \\
+
+      0101 &   (A$<<$2)+A \\
+
+      0110 & (A$<<$2)+(A$<<$1) \\
+
+      0111 & (A$<<$2)+(A$<<$1)+A \\
+
+      1000 &       A$<<$3 \\
+
+      1001 &   (A$<<$3)+A \\
+
+      1010 & (A$<<$3)+(A$<<$1) \\
+
+      1011 & (A$<<$3)+(A$<<$1)+A \\
+
+      1100 & (A$<<$3)+(A$<<$2) \\
+
+      1101 & (A$<<$3)+(A$<<$2)+A \\
+
+      1110 & (A$<<$3)+(A$<<$2)+(A$<<$1) \\
+
+      1111 & (A$<<$3)+(A$<<$2)+(A$<<$1)+A \\
+
+\end{tabular}  
+\label{t1}
+\end{table}
+
 
 \end{document}
 %%*************************************************************************
