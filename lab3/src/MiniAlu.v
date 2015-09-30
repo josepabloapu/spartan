@@ -12,7 +12,7 @@ module MiniAlu
 	input wire Clock,
  	input wire Reset,
  	output wire [7:0] oLed,
- 	output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
+// 	output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
  	`ifdef UART
  		output wire oUartTx,
  		input  wire iUartRx,
@@ -25,8 +25,8 @@ module MiniAlu
  	output wire oSramWe, 
  	output wire oSramOe,
 	
- 	output wire oVgaVsync,
- 	output wire oVgaHsync
+// 	output wire oVgaVsync,
+// 	output wire oVgaHsync
 );
 
 SRAM_CONTROLLER SRAMController
@@ -34,7 +34,7 @@ SRAM_CONTROLLER SRAMController
 	.Clock(Clock),
 	.Reset(Reset),
 	.iWriteEnable(rWriteEnable),	   //R/W Selection
-	.iTrigger(iTrigger),		         //Enable the SRAM R/W
+	.iTrigger(rTrigger),		         //Enable the SRAM R/W
 	.iAddress(rRequestAddr),         //Data from MiAlu
 	.iDataIn(rRequestData),          //Data that the guest wants to write into SRAM
 	.iSRAMDataIn(oSramData),         //Data from SRAM
@@ -61,20 +61,19 @@ SRAM_CONTROLLER SRAMController
 	assign wUartTxDataAvailable = wUartRxDataAvailable;
 `endif
 
-VgaController VGA
-(
-	.Clock(Clock),
-	.Reset(Reset),
-	.oVgaRed(oVgaRed),
-	.oVgaGreen(oVgaGreen),
-	.oVgaBlue(oVgaBlue),
-	.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
-	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
-);
+//Controller VGA
+//(
+//	.Clock(Clock),
+//	.Reset(Reset),
+//	.oVgaRed(oVgaRed),
+//	.oVgaGreen(oVgaGreen),
+//	.oVgaBlue(oVgaBlue),
+//	.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
+//	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
+//);
 
 wire [15:0] wIP,wIP_temp;
 reg         rWriteEnable,rBranchTaken;
-reg 		iTrigger;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg [15:0]   /*wSourceData0,wSourceData1,*/rResult;
@@ -83,7 +82,7 @@ wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue, wSourceDa
 wire [15:0] wResult_Fwd;
 
 // SRAM required wires
-reg [1:0]  rTrigger;	 
+reg  rTrigger;	 
 reg [18:0] rRequestAddr;
 reg [16:0] rRequestData;
 
@@ -200,7 +199,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -211,7 +210,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= wSourceData1 + wSourceData0;
@@ -222,7 +221,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= wImmediateValue;
@@ -233,8 +232,8 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
-		rTrigger 		 <= 1'b0;
-		rRequestAddr <= wSourceData0;
+		rTrigger 	 <= 1'b1;
+		rRequestAddr <= {3'b000,wSourceData0};
 		rRequestData <= 1'b0;
 		rResult      <= wSourceData0;
 	end
@@ -242,11 +241,11 @@ begin
 	`SWR:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
-		rTrigger 		 <= 1'b0;
-		rRequestAddr <= wSourceData0;
-		rRequestData <= wSourceData0;
+		rTrigger 	 <= 1'b1;
+		rRequestAddr <= {3'b000,wSourceData0};
+		rRequestData <= wSourceData1;
 		rResult      <= 1'b0;
 	end
 	//-------------------------------------
@@ -254,7 +253,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -269,7 +268,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -280,7 +279,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -291,7 +290,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
-		rTrigger 		 <= 1'b0;
+		rTrigger 	 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;

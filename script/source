@@ -3,8 +3,12 @@
 
 NOP
 STO	`R0		16'd8
-STO	`R6		16'd9
-STO	`R7		16'b0001
+STO	`R1		16'd9
+STO	`R2		16'b0001
+SWR `R0		`R1		`R2
+SRD `R0		`R1		`R2
+
+
 STO	`R3		16'h1
 STO	`R4		16'd1000
 STO 	`R5		16'd0
