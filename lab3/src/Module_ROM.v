@@ -17,7 +17,7 @@ begin
 	1: oInstruction = { `STO , `R7,16'hffff };
 	2: oInstruction = { `NOP ,24'd4000      }; 
 	3: oInstruction = { `LED ,8'b0,`R7,8'b0 };
-   4: oInstruction = { `JMP ,  8'd1,16'b0   };
+   	4: oInstruction = { `JMP ,  8'd1,16'b0  };
 	
 /*	
 	SRREAD, `R8, `R7, 8,b0 // r8 = SRAM[ R7 ]

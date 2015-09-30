@@ -8,48 +8,44 @@
 
 module MiniAlu
 (
- input wire Clock,
- input wire Reset,
- output wire [7:0] oLed,
- output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
- `ifdef UART
- output wire       oUartTx,
- input  wire       iUartRx,
- `endif
- output wire [18:0] oSramAddr,
- inout wire [7:0]   oSramData,
- output wire oSramCe,
- output wire oSramWe, 
- output wire oSramOe,
- 
- output wire oVgaVsync,
- output wire oVgaHsync
-
- 
+	input wire Clock,
+ 	input wire Reset,
+ 	output wire [7:0] oLed,
+ 	output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
+ 	`ifdef UART
+ 		output wire oUartTx,
+ 		input  wire iUartRx,
+ 	`endif
+ 	output wire [18:0] oSramAddr,
+ 	inout wire [7:0] oSramData,
+ 	output wire oSramCe,
+ 	output wire oSramWe, 
+ 	output wire oSramOe,
+ 	output wire oVgaVsync,
+ 	output wire oVgaHsync
 );
+
 `ifdef UART
-
-//====== XILINX UART MODULES ================//
-reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
-reg                                 rEn_16_X_Baud;
-wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
-wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
-wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
-
-assign wUartDataTx          = wUartDataRx;
-assign wUartTxDataAvailable = wUartRxDataAvailable;
+	//====== XILINX UART MODULES ================//
+	reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
+	reg                                 rEn_16_X_Baud;
+	wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
+	wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
+	wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
+	
+	assign wUartDataTx          = wUartDataRx;
+	assign wUartTxDataAvailable = wUartRxDataAvailable;
 `endif
 
 VgaController VGA
 (
-.Clock(Clock),
-.Reset(Reset),
-.oVgaRed(oVgaRed),
-.oVgaGreen(oVgaGreen),
-.oVgaBlue(oVgaBlue),
-.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
-.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
-
+	.Clock(Clock),
+	.Reset(Reset),
+	.oVgaRed(oVgaRed),
+	.oVgaGreen(oVgaGreen),
+	.oVgaBlue(oVgaBlue),
+	.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
+	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
 );
 
 wire [15:0]  wIP,wIP_temp;
