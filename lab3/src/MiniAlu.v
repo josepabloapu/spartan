@@ -4,6 +4,7 @@
 `include "Collaterals.v"
 `include "Module_ROM.v"
 `include "RAM.v"
+`include "SRAMController.v"
 
 
 module MiniAlu
@@ -24,6 +25,23 @@ module MiniAlu
  	output wire oVgaVsync,
  	output wire oVgaHsync
 );
+
+
+
+SRAM_CONTROLLER SRAMController
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.iWriteEnable(rWriteEnable),	     //R/W Selection
+	.iTrigger(iTrigger),		     //Enable the SRAM R/W
+	.iAddress(),            //Data from MiAlu
+	.iDataIn(),             //Data that the guest wants to write into SRAM
+	.iSRAMDataIn(),         //Data from SRAM
+	.oSRAMDataRead(),       //Data that was read from SRAM
+	.oSRAMDataWrite(),      //Data that we want to write into SRAM
+	.oSRAMAddressOut(),     //Address to read/write to SRAM
+);
+
 
 `ifdef UART
 	//====== XILINX UART MODULES ================//
@@ -48,16 +66,20 @@ VgaController VGA
 	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
 );
 
-wire [15:0]  wIP,wIP_temp;
+wire [15:0] wIP,wIP_temp;
 reg         rWriteEnable,rBranchTaken;
+reg 		iTrigger;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg [15:0]   /*wSourceData0,wSourceData1,*/rResult;
-
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination, wNextDest, wDestinationTemp;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue, wSourceDataTemp0, wSourceDataTemp1, wResultTemp;
-
 wire [15:0] wResult_Fwd;
+
+// SRAM required wires
+reg rTrigger;	 
+reg rRequestAddr;
+reg rRequestData;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RSLT_FWD
 (
@@ -174,14 +196,18 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= 0;
 	end
 	//-------------------------------------
 	`ADD:
 	begin
 		rFFLedEN     <= 1'b0;
-		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rBranchTaken <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= wSourceData1 + wSourceData0;
 	end
 	//-------------------------------------
@@ -190,13 +216,37 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= wImmediateValue;
+	end
+	//-------------------------------------
+	`SRD:
+	begin
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rBranchTaken <= 1'b0;
+		rRequestAddr <= wSourceData0;
+		rRequestData <= 1'b0;
+		rResult      <= wSourceData0;
+	end
+	//-------------------------------------
+	`SWR:
+	begin
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rBranchTaken <= 1'b0;
+		rRequestAddr <= wSourceData0;
+		rRequestData <= wSourceData0;
+		rResult      <= 1'b0;
 	end
 	//-------------------------------------
 	`BLE:
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
@@ -209,6 +259,8 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b1;
 	end
@@ -217,6 +269,8 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 	end
@@ -225,6 +279,8 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
+		rRequestAddr <= 1'b0;
+		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 	end	
