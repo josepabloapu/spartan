@@ -17,32 +17,38 @@ module MiniAlu
  		output wire oUartTx,
  		input  wire iUartRx,
  	`endif
+	
+	//SRAM pinout
  	output wire [18:0] oSramAddr,
  	inout wire [7:0] oSramData,
  	output wire oSramCe,
  	output wire oSramWe, 
  	output wire oSramOe,
+	
  	output wire oVgaVsync,
  	output wire oVgaHsync
 );
-
-
 
 SRAM_CONTROLLER SRAMController
 (
 	.Clock(Clock),
 	.Reset(Reset),
-	.iWriteEnable(rWriteEnable),	     //R/W Selection
-	.iTrigger(iTrigger),		     //Enable the SRAM R/W
-	.iAddress(),            //Data from MiAlu
-	.iDataIn(),             //Data that the guest wants to write into SRAM
-	.iSRAMDataIn(),         //Data from SRAM
-	.oSRAMDataRead(),       //Data that was read from SRAM
-	.oSRAMDataWrite(),      //Data that we want to write into SRAM
-	.oSRAMAddressOut(),     //Address to read/write to SRAM
+	.iWriteEnable(rWriteEnable),	   //R/W Selection
+	.iTrigger(iTrigger),		         //Enable the SRAM R/W
+	.iAddress(rRequestAddr),         //Data from MiAlu
+	.iDataIn(rRequestData),          //Data that the guest wants to write into SRAM
+	.iSRAMDataIn(oSramData),         //Data from SRAM
+	.oSRAMDataRead(oSramData),       //Data that was read from SRAM
+	.oSRAMDataWrite(oSramData),      //Data that we want to write into SRAM
+	.oSRAMAddressOut(oSramAddr),     //Address to read/write to SRAM
 );
 
-
+	output wire [18:0] oSramAddr;
+ 	inout wire [7:0] oSramData;
+ 	output wire oSramCe;
+ 	output wire oSramWe; 
+ 	output wire oSramOe;
+	
 `ifdef UART
 	//====== XILINX UART MODULES ================//
 	reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
@@ -77,9 +83,9 @@ wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue, wSourceDa
 wire [15:0] wResult_Fwd;
 
 // SRAM required wires
-reg rTrigger;	 
-reg rRequestAddr;
-reg rRequestData;
+reg [1:0]  rTrigger;	 
+reg [18:0] rRequestAddr;
+reg [16:0] rRequestData;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RSLT_FWD
 (
@@ -89,8 +95,6 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RSLT_FWD
 	.D(rResult),
 	.Q(wResult_Fwd)
 );
-
-
 
 ROM InstructionRom 
 (
@@ -196,6 +200,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -206,6 +211,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= wSourceData1 + wSourceData0;
@@ -216,6 +222,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= wImmediateValue;
@@ -226,6 +233,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= wSourceData0;
 		rRequestData <= 1'b0;
 		rResult      <= wSourceData0;
@@ -234,8 +242,9 @@ begin
 	`SWR:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable <= 1'b0;
 		rBranchTaken <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= wSourceData0;
 		rRequestData <= wSourceData0;
 		rResult      <= 1'b0;
@@ -245,6 +254,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -259,6 +269,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -269,6 +280,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
@@ -279,6 +291,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
+		rTrigger 		 <= 1'b0;
 		rRequestAddr <= 1'b0;
 		rRequestData <= 1'b0;
 		rResult      <= 0;
