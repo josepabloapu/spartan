@@ -32,6 +32,8 @@ module SRAM_CONTROLLER # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8 )
 
 
 wire wAddrEn;
+wire wDataEn
+
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH-1 ) FFD_ADDR 
 (
