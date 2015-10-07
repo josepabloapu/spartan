@@ -21,18 +21,18 @@ module SRAM_CONTROLLER # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8 )
 	input wire							Reset,
 	input wire 							iWriteEnable,	     //R/W Selection
 	input wire 							iTrigger,		     //Enable the SRAM R/W
-	input wire [ADDR_WIDTH-1:0]	iAddress,           //Data from MiAlu
-	input wire [DATA_WIDTH-1:0] 	iDataIn,            //Data that the guest wants to write into SRAM
-	input wire [DATA_WIDTH-1:0]	iSRAMDataIn,        //Data from SRAM
-	output wire [DATA_WIDTH-1:0]	oSRAMDataRead,      //Data that was read from SRAM
-	output wire [DATA_WIDTH-1:0] 	oSRAMDataWrite,     //Data that we want to write into SRAM
-	output wire [ADDR_WIDTH-1:0]	oSRAMAddressOut     //Address to read/write to SRAM
+	input wire [ADDR_WIDTH-1:0]			iAddress,           //Data from MiAlu
+	input wire [DATA_WIDTH-1:0] 		iDataIn,            //Data that the guest wants to write into SRAM
+	input wire [DATA_WIDTH-1:0]			iSRAMDataIn,        //Data from SRAM
+	output wire [DATA_WIDTH-1:0]		oSRAMDataRead,      //Data that was read from SRAM
+	output wire [DATA_WIDTH-1:0] 		oSRAMDataWrite,     //Data that we want to write into SRAM
+	output wire [ADDR_WIDTH-1:0]		oSRAMAddressOut     //Address to read/write to SRAM
 );
 
 
 
-wire wAddrEn;
-wire wDataEn
+reg wAddrEn;
+reg wDataEn;
 
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH-1 ) FFD_ADDR 

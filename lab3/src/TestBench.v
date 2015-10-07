@@ -30,15 +30,24 @@ module TestBench;
 
 	// Outputs
 	wire [7:0] oLed;
-	reg wUartTx,wUartRx;
+
+	//SRAM pinout
+ 	wire [18:0] oSramAddr;
+ 	wire [7:0] oSramData;
+ 	wire oSramCe;
+ 	wire oSramWe;
+ 	wire oSramOe;
 
 	// Instantiate the Unit Under Test (UUT)
 	MiniAlu uut (
 		.Clock(Clock), 
 		.Reset(Reset), 
-		.oUartTx(wUartTx),
-		.iUartRx(wUartRx),
-		.oLed(oLed)
+		.oLed(oLed),
+		.oSramAddr(oSramAddr),
+		.oSramData(oSramData),
+		.oSramOe(oSramOe),
+		.oSramWe(oSramWe),
+		.oSramCe(oSramCe)	
 	);
 	
 	always
@@ -56,22 +65,10 @@ module TestBench;
 		// Wait 100 ns for global reset to finish
 		#100;
 		Reset = 1;
-		wUartRx = 0;
-		#50
-		
+		#50;
 		Reset = 0;
-		#50
-		#50
-		#50
-		#50
-		#50
-		#50
-		wUartRx = 1;
-		#50
-		wUartRx = 0 ;
-		#50
-		wUartRx = 1;
-        
+
+
 		// Add stimulus here
 
 	end
