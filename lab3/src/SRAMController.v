@@ -15,27 +15,30 @@
 // SRAM reading times
 // tRC = 20ns
 
-module SRAM_CONTROLLER # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8 )
+module SRAM_CONTROLLER # ( parameter DATA_WIDTH= 8, parameter ADDR_WIDTH=19 )
 (
 	input wire							Clock,
 	input wire							Reset,
 	input wire 							iWriteEnable,	     //R/W Selection
 	input wire 							iTrigger,		     //Enable the SRAM R/W
-	input wire [ADDR_WIDTH-1:0]			iAddress,           //Data from MiAlu
+	input wire [ADDR_WIDTH-1:0]		iAddress,           //Data from MiAlu
 	input wire [DATA_WIDTH-1:0] 		iDataIn,            //Data that the guest wants to write into SRAM
-	input wire [DATA_WIDTH-1:0]			iSRAMDataIn,        //Data from SRAM
+	input wire [DATA_WIDTH-1:0]		iSRAMDataIn,        //Data from SRAM
 	output wire [DATA_WIDTH-1:0]		oSRAMDataRead,      //Data that was read from SRAM
 	output wire [DATA_WIDTH-1:0] 		oSRAMDataWrite,     //Data that we want to write into SRAM
-	output wire [ADDR_WIDTH-1:0]		oSRAMAddressOut     //Address to read/write to SRAM
+	output wire [ADDR_WIDTH-1:0]		oSRAMAddressOut,     //Address to read/write to SRAM
+	output reg                      oSRaMWriteEnable
 );
 
+reg wAddrEn, rDataWriteHold ;
+reg rDataReadEn, rDataWriteEn;
+wire [DATA_WIDTH-1:0] wSRAMDataWrite;
 
 
-reg wAddrEn;
-reg wDataEn;
+assign oSRAMDataWrite = ( rDataWriteEn ) ?  wSRAMDataWrite : 8'bz ;
 
 
-FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH-1 ) FFD_ADDR 
+FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH ) FFD_ADDR 
 (
 	.Clock(  Clock        ),
 	.Reset(  Reset        ),
@@ -45,21 +48,21 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH-1 ) FFD_ADDR
 );
 
 
-FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH-1 ) FFD_DATAOUT 
+FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH ) FFD_DATAOUT 
 (
 	.Clock(  Clock           ),
 	.Reset(  Reset           ),
-	.Enable( 1'b1            ),
+	.Enable( rDataWriteHold  ),
 	.D(      iDataIn         ),
-	.Q(      oSRAMDataWrite  )
+	.Q(      wSRAMDataWrite  )
 );
 
 
-FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH-1 ) FFD_DATAIN 
+FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH ) FFD_DATAIN 
 (
 	.Clock(  Clock            ),
 	.Reset(  Reset            ),
-	.Enable( wDataEn          ),
+	.Enable( rDataReadEn      ),
 	.D(      iSRAMDataIn      ),
 	.Q(      oSRAMDataRead    )
 );
@@ -85,18 +88,24 @@ begin
 		`LISTEN:
 		begin
 			wAddrEn  = 1'b1;	//Hold address in this state to make sure it will become available in next state
-			wDataEn  = 1'b0;
+			rDataReadEn  = 1'b0;
+			rDataWriteEn = 1'b0;
+			rDataWriteHold = iWriteEnable;
+			oSRaMWriteEnable = 1'b1;
 
 			if (iTrigger)
-				   rNextAddr = ( iWriteEnable ) ? `READ_REQUEST :  `WRITE_SETUP ;
+				   rNextState = ( iWriteEnable ) ? `WRITE_SETUP : `READ_REQUEST  ;
 			else 
 			      rNextState = `LISTEN;
 		end
 
 		`WRITE_SETUP:
 		begin
-			wAddrEn  = 1'b1;
-			wDataEn  = 1'b1;
+			wAddrEn          = 1'b0;
+			rDataReadEn      = 1'b0;
+			rDataWriteEn     = 1'b0;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b1;
 
 			rNextState = `WRITE;
 			
@@ -104,33 +113,44 @@ begin
 
 		`WRITE:
 		begin
-			wAddrEn  = 1'b0;
-			wDataEn  = 1'b0;
-
+			wAddrEn          = 1'b0;
+			rDataReadEn      = 1'b0;
+			rDataWriteEn     = 1'b0;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b1;
 
 			rNextState = `WRITE_HOLD;
 		end
 
 		`WRITE_HOLD:
 		begin
-			wAddrEn  = 1'b0;
-			wDataEn  = 1'b0;
+			wAddrEn          = 1'b0;
+			rDataReadEn      = 1'b0;
+			rDataWriteEn     = 1'b1;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b0;
 
 			rNextState = `LISTEN;
 		end
 
 		`READ_REQUEST:			//Present address bus
 		begin	
-			wAddrEn  = 1'b0;
-            wDataEn  = 1'b0;
+			wAddrEn          = 1'b0;
+			rDataReadEn      = 1'b0;
+			rDataWriteEn     = 1'b0;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b1;
 
 			rNextState = `READ_LATCH;
 		end
 
 		`READ_LATCH:           //Readback data from Memory
 		begin
-			wAddrEn  = 1'b0;
-            wDataEn  = 1'b1;
+			wAddrEn          = 1'b0;
+         rDataReadEn      = 1'b1;
+         rDataWriteEn     = 1'b0;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b1;
 
 			rNextState = `LISTEN;
 		end
@@ -138,8 +158,11 @@ begin
 
 		default:
 		begin
-			wAddrEn  =  1'b0;
-			wDataEn  =  1'b0;
+			wAddrEn          =  1'b0;
+			rDataReadEn      =  1'b0;
+			rDataWriteEn     = 1'b0;
+			rDataWriteHold   = 1'b0;
+			oSRaMWriteEnable = 1'b1;
 
 			rNextState = `LISTEN;
 		end

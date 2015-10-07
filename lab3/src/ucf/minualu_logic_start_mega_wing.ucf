@@ -17,20 +17,20 @@ NET oLed(7)           LOC="P127" | IOSTANDARD=LVTTL;                            
 NET oLed(0)           LOC="P55"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # C13
 NET oLed(1)           LOC="P50"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # C14
 NET oLed(2)           LOC="P47"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # C15
-NET oVgaRed(0)     LOC="P98"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D0
-NET oVgaRed(1)     LOC="P95"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D1
-NET oVgaRed(2)     LOC="P92"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D2
-NET oVgaRed(3)     LOC="P87"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D3
-NET oVgaGreen(3)   LOC="P84"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D4
-NET oVgaGreen(2)   LOC="P82"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D5
-NET oVgaGreen(1)   LOC="P80"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D6
-NET oVgaGreen(0)   LOC="P78"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D7
-NET oVgaBlue(3)    LOC="P74"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D8
-NET oVgaBlue(2)    LOC="P66"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D9
-NET oVgaBlue(1)    LOC="P61"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D10
-NET oVgaBlue(0)    LOC="P51"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D13
-NET oVgaVsync      LOC="P48"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D14
-NET oVgaHSync      LOC="P39"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D15
+//NET oVgaRed(0)     LOC="P98"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D0
+//NET oVgaRed(1)     LOC="P95"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D1
+//NET oVgaRed(2)     LOC="P92"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D2
+//NET oVgaRed(3)     LOC="P87"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D3
+//NET oVgaGreen(3)   LOC="P84"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D4
+//NET oVgaGreen(2)   LOC="P82"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D5
+//NET oVgaGreen(1)   LOC="P80"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D6
+//NET oVgaGreen(0)   LOC="P78"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D7
+//NET oVgaBlue(3)    LOC="P74"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D8
+//NET oVgaBlue(2)    LOC="P66"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D9
+//NET oVgaBlue(1)    LOC="P61"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D10
+//NET oVgaBlue(0)    LOC="P51"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D13
+//NET oVgaVsync      LOC="P48"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D14
+//NET oVgaHSync      LOC="P39"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # D15
 
 #put the SRAM pins here
 NET "oSramAddr<0>" LOC = "P7" | IOSTANDARD=LVTTL | SLEW=FAST;
