@@ -28,5 +28,4 @@
 `define R6 8'd6
 `define R7 8'd7
 
-
 `endif

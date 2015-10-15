@@ -5,6 +5,7 @@
 `include "Module_ROM.v"
 `include "RAM.v"
 `include "SRAMController.v"
+`define DEBUG 1
 
 
 module MiniAlu
@@ -165,6 +166,7 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD4
 
 
 reg rFFLedEN;
+`ifndef DEBUG
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 (
 	.Clock(Clock),
@@ -173,7 +175,9 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 	.D( wSourceData1[7:0] ),
 	.Q( oLed    )
 );
-
+`else 
+assign oLed = oSramData;
+`endif
 //Almacenamiento de la dirección destino del proceso anterior del pipeline
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_NDF
 (
@@ -236,7 +240,7 @@ begin
 	`SRD:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable <= 1'b0;
 		rSramWriteEnable <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rTrigger 	 <= 1'b1;
@@ -248,7 +252,7 @@ begin
 	`SWR:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable <= 1'b0;
 		rSramWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
 		rTrigger 	 <= 1'b1;

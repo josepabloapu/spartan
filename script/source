@@ -1,27 +1,30 @@
-`define 	LOOP1	8 
-`define 	LOOP2 5
+`define LOOP1 8 
+`define LOOP2 5
+`define LOOP3 8 
+`define LOOP4 5
 
 NOP
-STO	`R0		16'd8
-STO	`R1		16'd9
-STO	`R2		16'b0001
-SWR `R0		`R1		`R2
-SRD `R0		`R1		`R2
-
-
-STO	`R3		16'h1
-STO	`R4		16'd1000
-STO 	`R5		16'd0
-LED	`R7
-STO	`R1		16'h0
-STO 	`R2		16'd500
-ADD	`R1		`R1		`R3 
-BLE	`LOOP1	`R1		`R2
-ADD	`R5		`R5		`R3
-BLE	`LOOP1	`R1		`R2
+STO	`R11		16'h10
+STO	`R12		16'h20
+STO	`R13		16'h30
+STO	`R14		16'b0000000011000011
+STO	`R15		16'b0000000011100111
+STO	`R16		16'b0000000000100100
+//Guarde lo que hay en <R11> en <R14>
+ADD 8'hff `R14 `R11
 NOP
-IMUL	`R7		`R0		`R6
-JMP	8'd2
+NOP
+ADD 8'hff `R15 `R12
+NOP
+NOP
+ADD 8'hff `R16 `R13
+NOP
+NOP
+//Leo lo que está en la dir <R11> y lo pongo en <R17>
+BLE `R17 8'hff `R11
+NOP
+NOP
+JMP 8'd2
 
 
 
