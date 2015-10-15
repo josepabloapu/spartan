@@ -1,2 +1,0 @@
-verilog work "../src/VgaController.v"
-verilog work "../src/MiniAlu.v"

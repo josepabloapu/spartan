@@ -1,8 +1,0 @@
-INTSTYLE=ise
-INFILE=/home/japup/Desktop/papilioDuo/xilinx/MiniAlu.ncd
-OUTFILE=/home/japup/Desktop/papilioDuo/xilinx/MiniAlu.bit
-FAMILY=Spartan6
-PART=xc6slx9-2tqg144
-WORKINGDIR=/home/japup/Desktop/papilioDuo/xilinx
-LICENSE=WebPack
-USER_INFO=__0_0_0
