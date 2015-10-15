@@ -1,0 +1,49 @@
+WE 1 read	0 write
+CE 0
+OE	0 read/write	1 output disable
+
+state: read 
+
+init
+we 1
+oe 1
+ce 1
+
+enable chip
+we 1
+oe 1
+ce 0
+
+enable out
+we 1
+oe 0
+ce 0
+
+keep the same state to complete
+the taa.
+
+end
+we 1
+CE 1
+OE 1
+
+20ns address acces time
+
+WRITE CYCLE
+
+init
+CE 1
+WE 1
+OE 0
+
+write 12ns min
+CE 0
+WE 0
+OE 0
+
+end
+ce 1
+we 1
+oe 0
+
+
