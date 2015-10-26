@@ -162,12 +162,16 @@ endmodule
 
 \end{lstlisting}
 
- Además se debe crear un módulo de memoria RAM(de video) aparte del módulo RAM ya existente. Esto porque la memoria RAM de video se encargará de guardar los bits correspondientes a los colores de los pixeles que se van a desplegar en pantalla.La resolución que se decidió utilizar es 256x256 pixeles ya que la SPARTAN no tiene suficiente capacidad para soportar toda la resolución de una pantalla como las del laboratorio. 
+ Además se debe crear un módulo de memoria RAM(de video) aparte del módulo RAM ya existente. Esto porque la memoria RAM de video se encargará de guardar los bits correspondientes a los colores de los pixeles que se van a desplegar en pantalla. La resolución que se decidió utilizar es 256x256 pixeles ya que la SPARTAN no tiene suficiente capacidad para soportar toda la resolución de una pantalla como las del laboratorio. 
 
 \section*{Ejercicio 2}
 \subsection*{Solución Propuesta}
-Para este segundo ejercicio como no se utilizará la SPARTAN 3E la entrada de datos no se hará por medio de un teclado sino a través de una pequeña interfaz que posee el shield, que tiene 4 botónes, arriba,abajo,derecha e izquierda.
+Para este segundo ejercicio como no se utilizará la SPARTAN 3E. La entrada de datos no se hará por medio de un teclado sino a través de una pequeña interfaz que posee el shield, que tiene 4 botónes, arriba,abajo,derecha e izquierda.
 De no existir uno, se deberá crear una controlador para la botonera, el cual lo que hará es leer cuando uno de los botones se presiona.
 Luego con la ayuda de la memoria de video se creará un tablero de ajedrez y se guardará la posición del cuadro inicial, además una máquina de estados se encargará de ver en cual cuadro se encuentra y cual de los botonés se precionó para moverse al próximo cuadro. A la salida de la memoria de video se verificará si se van a mostrar los datos del cuadro al que se quiere ir, si se comprueban entonces el cuadro se pinta de color rojo.
+
+\section*{Ejercicio 3 (opcional)}
+\subsection*{Solución Propuesta}
+El modelos de la tarjeta de desarrollo de Spartan 6 cuenta con una memoria SRAM. En el pasado laboratorio se trabajó en un módulo para escribir y leer en la SRAM que está integrada a la Papilio Duo. Por lo que es posible que agregando este módulo se podrá utilizar la SRAM como memoria de video.
 \end{document}
 %%*************************************************************************
