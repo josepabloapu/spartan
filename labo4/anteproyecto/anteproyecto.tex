@@ -28,7 +28,7 @@
 \usepackage{fancyhdr} 
 \pagestyle{fancy}
 \usepackage{lastpage}
-\lhead{Laboratorio 2}
+\lhead{Laboratorio 4}
 \chead{}
 \rhead{Anteproyecto}
 \lfoot{}
@@ -70,14 +70,13 @@ Utilizar los periféricos de la tarjeta de desarrollo.
 
 \section*{Ejercicio1}
 \subsection*{Solución Propuesta}
-Para este proyecto se utilizará la tarjeta Papilio Duo en lugar de la Spartan 3E, esta posee un shield con una entrada VGA.
-Para el control de la entrada VGA, con cada flanco de reloj se lee la memoria de video que corresponde al color de una fila y columna específica.
-Conforme se va escribiendo en cada columna, se utiliza una señal de sincronización vertical para escribir el dato en el pixel correspondiente o deseado. Cuando se termina una de las filas de la pantalla, se utiliza una señal de sincronización horizontal para pasar a la siguiente fila de la pantalla. Una metáfora comparativa de este sistema sería una máquina de escribir que tiene un "sincronizador vertical" que alinea la letra a la columna y un "sincronizador horizontal" que al finalizar la fila, tira el tambor con la hoja a la primera posición de la siguiente fila.
-Se necesitará entonces crear un módulo controlador VGA que se encargará de controlar las señales de sincronización y los colores que se asignaran a los pixeles. El controlador seguirá las siguientes especificaciones temporales.
+Para este proyecto se utilizará la tarjeta Papilio Duo en lugar de la Spartan 3E, la cual posee un shield con una entrada VGA. Para el control de esta entrada VGA, de acuerdo con lo descrito en el enunciado, con cada flanco de reloj se leerá la memoria de video que corresponde al color de una fila y columna específica. Para ello se escribe en forma de barrido horizontal para cada columna de pixeles con una frecuencia determinada que puede ser reseteada por medio de la señal HS(Horizontal Sync), para volver al principio de la fila. Posterior a ello, al darse la llegada a la ultima fila y la última columna, o para volver a empezar en la primera fila se utiliza una señal de sincronización vertical VS(Vertical Sync). Una metáfora comparativa de este sistema sería una máquina de escribir que tiene un "sincronizador vertical" que alinea la letra a la columna y un "sincronizador horizontal" que al finalizar la fila, tira el tambor con la hoja a la primera posición de la siguiente fila. \\
+Se necesitará entonces crear un módulo VGA que se encargue de controlar las señales de sincronización y los colores que se asignaran a los pixeles. Para ello se propone junto con las indicaciones del enunciado, que el controlador siga las siguientes especificaciones.
 \begin{center}
 \includegraphics[width= 10cm]{sinc.jpg}
 \end{center}
-Un código viable para el módulo es el siguiente:
+\newpage
+Para ello, un código viable para el módulo sería el siguiente:
 \begin{lstlisting}
 module VGA_controller
 (
@@ -90,7 +89,7 @@ output wire [2:0] oVGA_RGB
 );
 
 wire [9:0] wHorizontal_counter ;
-wire [9:0] wVer t ical_counter ;
+wire [9:0] wVertical_counter ;
 assign oVGA_RGB = {1'b1 ,1'b0,1'b0} ;
 reg fila_final,columna_final ;
 
@@ -166,12 +165,12 @@ endmodule
 
 \section*{Ejercicio 2}
 \subsection*{Solución Propuesta}
-Para este segundo ejercicio como no se utilizará la SPARTAN 3E. La entrada de datos no se hará por medio de un teclado sino a través de una pequeña interfaz que posee el shield, que tiene 4 botónes, arriba,abajo,derecha e izquierda.
+Para este segundo ejercicio como no se utilizará la SPARTAN 3E, la entrada de datos no se hará por medio de un teclado sino a través de una pequeña interfaz que posee el shield del Papilio Duo, que tiene 4 botónes, arriba,abajo,derecha e izquierda.
 De no existir uno, se deberá crear una controlador para la botonera, el cual lo que hará es leer cuando uno de los botones se presiona.
-Luego con la ayuda de la memoria de video se creará un tablero de ajedrez y se guardará la posición del cuadro inicial, además una máquina de estados se encargará de ver en cual cuadro se encuentra y cual de los botonés se precionó para moverse al próximo cuadro. A la salida de la memoria de video se verificará si se van a mostrar los datos del cuadro al que se quiere ir, si se comprueban entonces el cuadro se pinta de color rojo.
+Luego con la ayuda de la memoria de video se creará un tablero de ajedrez y se guardará la posición del cuadro inicial, además una máquina de estados se encargará de ver en cual cuadro se encuentra y cual de los botonés se presionó para moverse al próximo cuadro. A la salida de la memoria de video se verificará si se van a mostrar los datos del cuadro al que se quiere ir, si se comprueban entonces el cuadro se pinta de color rojo.
 
 \section*{Ejercicio 3 (opcional)}
 \subsection*{Solución Propuesta}
-El modelos de la tarjeta de desarrollo de Spartan 6 cuenta con una memoria SRAM. En el pasado laboratorio se trabajó en un módulo para escribir y leer en la SRAM que está integrada a la Papilio Duo. Por lo que es posible que agregando este módulo se podrá utilizar la SRAM como memoria de video.
+El modelo de la tarjeta de desarrollo de Spartan 6 cuenta con una memoria SRAM. En el pasado laboratorio se trabajó en un módulo para escribir y leer en la SRAM que está integrada a la Papilio Duo. Por lo que es posible que agregando este módulo se podrá utilizar la SRAM como memoria de video.
 \end{document}
 %%*************************************************************************
