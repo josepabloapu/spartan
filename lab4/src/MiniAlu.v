@@ -13,7 +13,7 @@ module MiniAlu
 	input wire Clock,
  	input wire Reset,
  	output wire [7:0] oLed,
-// 	output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
+ 	output wire [3:0] oRed,oGreen,oBlue,
  	`ifdef UART
  		output wire oUartTx,
  		input  wire iUartRx,
@@ -24,14 +24,18 @@ module MiniAlu
  	inout wire [7:0] oSramData,
  	output wire oSramCe,
  	output wire oSramWe, 
- 	output wire oSramOe
-
-// 	output wire oVgaVsync,
-// 	output wire oVgaHsync
+ 	output wire oSramOe,
+ 	output wire oVsync,
+ 	output wire oHsync
 );
 
 assign oSramCe = 1'b0;
 assign oSramOe = 1'b0;
+assign oRed = 4'b0000;
+assign oGreen = 4'b1111;
+assign oBlue = 4'b0000;
+assign oVsync = 4'b0000;
+assign oHsync = 4'b0000;
 
 wire [7:0] wSramData;
 
@@ -40,7 +44,7 @@ SRAM_CONTROLLER SRAMController
 	.Clock(Clock),
 	.Reset(Reset),
 	.iWriteEnable(rSramWriteEnable),	 //R/W Selection
-	.iTrigger(rTrigger),		     //Enable the SRAM R/W
+	.iTrigger(rTrigger),		     		//Enable the SRAM R/W
 	.iAddress(rRequestAddr),         //Data from MiAlu
 	.iDataIn(rRequestData),          //Data that the guest wants to write into SRAM
 	.iSRAMDataIn(oSramData),         //Data from SRAM
@@ -68,11 +72,11 @@ SRAM_CONTROLLER SRAMController
 //(
 //	.Clock(Clock),
 //	.Reset(Reset),
-//	.oVgaRed(oVgaRed),
-//	.oVgaGreen(oVgaGreen),
-//	.oVgaBlue(oVgaBlue),
-//	.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
-//	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
+//	.oRed(oRed),
+//	.oGreen(oGreen),
+//	.oBlue(oBlue),
+//	.oVsync(oVsync),	//Polarity of horizontal sync pulse is negative.
+//	.oHsync( oHsync )	//Polarity of vertical sync pulse is negative.
 //);
 
 wire [15:0] wIP,wIP_temp;
