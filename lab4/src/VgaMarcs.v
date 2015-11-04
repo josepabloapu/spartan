@@ -35,70 +35,31 @@ module VgaControllerMarcs (
 	output wire [3:0] oVgaRed,
 	output wire [3:0] oVgaGreen,
 	output wire [3:0] oVgaBlue,
-	output reg oVgaVsync,
-	output reg oVgaHsync
+	output wire oVgaVsync,
+	output wire oVgaHsync
 );
 
-reg colReset;
-reg rowReset;
+wire wColCurrent;
+wire wRowCurrent;
+wire wColumnReset;
+wire wRowReset;
+wire wPllLocked;
 
-always @ ( Reset )
-begin
-	colReset <= 1'b1;
-	rowReset <= 1'b1;
-end
+assign wPllLocked = 0;
 
 // **************************************************
 // RESET LOGIC
 // **************************************************
-
-// VSync
-always @ ( Clock )
-begin
-	if (colCurrent == 806)
-	begin 
-		colReset <= 1'b1;
-		oVgaVsync <= 1'b1;
-	end
-	else
-	begin  
-		colReset <= 1'b0;
-		oVgaVsync <= 1'b0;
-	end
-end
-
-// HSync
-always @ ( Clock )
-begin
-	if (rowCurrent == 1344) 
-	begin
-		rowReset <= 1'b1;
-		oVgaHsync <= 1'b1;
-	end
-	else 
-	begin 
-		rowReset <= 1'b0;
-		oVgaHsync <= 1'b0;
-	end
-end
+assign wReachedLastCol = (wColCurrent == 806 );
+assign wColumnReset = Reset | wPllLocked | wReachedLastCol;
+assign wReachedLastRow = (wRowCurrent == 1344 );
+assign wRowReset = Reset | wPllLocked | wReachedLastRow;
 
 // **************************************************
-// VSYNC LOGIC
+// SYNC LOGIC
 // **************************************************
-
-// always @ ( Clock )
-// begin
-	
-// end
-
-// **************************************************
-// HSYNC LOGIC
-// **************************************************
-
-// always @ ( Clock )
-// begin
-	
-// end
+assign oVgaVsync = (wReachedLastCol) ? 1'b0 : 1'b1;
+assign oVgaHsync = (wReachedLastRow) ? 1'b0 : 1'b1;
 
 // **************************************************
 // COLOR LOGIC
@@ -121,18 +82,18 @@ assign oVgaBlue  = 3'b000;
 
 UPCOUNTER_POSEDGE COLCOUNTER (
 .Clock  (Clock), 
-.Reset  (colReset),
+.Reset  (wColumnReset),
 .Initial(1'b0),
 .Enable (1'b1),
-.Q      (colCurrent)
+.Q      (wColCurrent)
 );
 
 UPCOUNTER_POSEDGE ROWCOUNTER (
 .Clock  (Clock), 
-.Reset  (rowReset),
+.Reset  (wRowReset),
 .Initial(1'b0),
 .Enable (1'b1),
-.Q      (rowCurrent)
+.Q      (wRowCurrent)
 );
 
 // **************************************************

@@ -1,3 +1,6 @@
+`ifndef COLLATERALS_INCLUDED
+`define COLLATERALS_INCLUDED 1
+
 `timescale 1ns / 1ps
 //------------------------------------------------
 module UPCOUNTER_POSEDGE # (parameter SIZE=16)
@@ -75,3 +78,4 @@ reg [SIZE-1:0] tmp;
     assign O  = tmp;
 endmodule
 
+`endif
