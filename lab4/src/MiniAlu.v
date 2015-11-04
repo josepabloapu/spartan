@@ -30,7 +30,7 @@ module MiniAlu
 // assign wUartDataTx          = wUartDataRx;
 // assign wUartTxDataAvailable = wUartRxDataAvailable;
 
-VgaController VGA
+VgaControllerMarcs VGA
 (
 .Clock(Clock),
 .Reset(Reset),
@@ -38,7 +38,7 @@ VgaController VGA
 .oVgaGreen(oVgaGreen),
 .oVgaBlue(oVgaBlue),
 .oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
-.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
+.oVgaHsync(oVgaHsync)	//Polarity of vertical sync pulse is negative.
 
 );
 
