@@ -49,7 +49,7 @@ endmodule
 
 
 //------------------------------------------------
-module SHIFTLEFT_POSEDGE # ( parameter SIZE=`WIDTH )
+module SHIFTLEFT_POSEDGE # ( parameter SIZE=16 )
 ( input wire Clock,
   input wire Reset,
   input wire[SIZE-1:0] Initial,
