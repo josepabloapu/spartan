@@ -46,7 +46,7 @@
 
 \begin{huge}
 \begin{center}
-\textbf{Laboratorio 3: Circuitos combinatorios}
+\textbf{Laboratorio 3 : Manejo de lectura y escritura sobre la SRAM}
 \end{center}
 \end{huge}
 
@@ -56,13 +56,17 @@ Jose Apú (B10407), Francisco Molina (B14194), \\Marco Montero (A94000), Dennis 
 \end{center}
 \end{Large}
 
+\section*{Objetivo General}
+
+Implementar una máquina de estados en el Spartan 6 que cumpla con la temporización necesaria para escribir y leer datos de una memoria SRAM en una plataforma Papilio Duo.\\[0.3 cm]
+
 
 \section*{Ejercicio 1}
-Implemente una máquina de estados en el Spartan 6 que cumpla con la temporización necesaria para escribir y leer datos de una memoria SRAM en una plataforma Papilio Duo.\\[0.3 cm]
+La tarjeta de desarrollo Papilio duo posee una fpga que aunado a un wing permite usar leds para observar que se está leyendo y escribiendo sobre una posición de memoria, esto utilizando las instrucciones creadas en laboratorios anteriores para desplegar información en los leds.\\
 
-Para este ejercicio se instanció en la MiniAlu del Spartan 6 el controlador de una SRAM creado a partir de una máquina de estados encargada de manejar las diferentes señales necesarias en los diferentes pines para el correcto funcionamiento de escritura y lectura sobre la SRAM. Posterior a esto se escribió una serie de instrucciones en la MiniAlu de forma que la escritura y la lectura a las diferentes posiciones de la memoria fuera transparente para el usuario. Por último se escribió en la ROM un programa de prueba que escribiera y leyera datos en la memoria y escribiera los ultimos 8 bits en los LEDs de la Papilio Duo. El Papilio duo, tiene una fpga, un wing que permite usar leds para ver que está leyendo y escribiendo, esto funciona para debuggear. \\
+Para este ejercicio se instanció en la MiniAlu del Spartan 6 el controlador de una SRAM creado a partir de una máquina de estados encargada de manejar las diferentes señales necesarias en los diferentes pines para el correcto funcionamiento de escritura y lectura sobre la SRAM. Posterior a esto se escribió una serie de instrucciones en la MiniAlu de forma que la escritura y la lectura a las diferentes posiciones de la memoria fuera transparente para el usuario. Por último se escribió en la ROM un programa de prueba que escribiera y leyera datos en la memoria y escribiera los ultimos 8 bits en los LEDs de la Papilio Duo.  \\
 
-
+El controlador creado seguirá el siguiente esquema para sus entradas y salidas:
 
 \begin{figure}[hbtp]
 \centering
@@ -89,21 +93,21 @@ Cabe destacar que los tiempos a cumplir para el ciclo de escritura y lectura son
 
 \begin{figure}[hbtp]
 \centering
-\includegraphics[width=10cm]{write-form.png}
+\includegraphics[width=12cm]{write-form.png}
 \caption{Ciclo escritura}
 \label{Cic1}
 \end{figure}
 
 \begin{figure}[hbtp]
 \centering
-\includegraphics[width=10cm]{read-form.png}
+\includegraphics[width=12cm]{read-form.png}
 \caption{Ciclo lectura}
 \label{Cic2}
 \end{figure}
 
 \newpage
 
-Además para nuestro trabajo la papillio esta definida para ciclos de trabajo de un rango de 20ns. Por lo tanto los tiempos min y max a cumplir son los correspodientes a la columna $"$-20ns$"$ en las tablas siguientes:
+Además para nuestro trabajo el modelo de la papillio esta definido para ciclos de trabajo de un rango de 20ns. Por lo tanto los tiempos min y max a cumplir son los correspodientes a la columna $"$-20ns$"$ en las tablas siguientes:
 
 \begin{figure}[hbtp]
 \centering
@@ -123,88 +127,9 @@ Además para nuestro trabajo la papillio esta definida para ciclos de trabajo de
 
 
 \subsection*{SRAM controller}
+
+Como se indicó el controlador se implementó mediante una máquina de estados. Esta comienza en un estado base llamado LISTEN y dependiendo de si se quiere leer o escribir sobre la SRAM el siguiente estado que tomará será WRITE\_SETUP O READ\_REQUEST, que serán los estados primarios para comenzar el ciclo de escritura y lectura respectivamente. 
 \begin{lstlisting}
-`define LISTEN 		  0
-`define WRITE_SETUP   1
-`define WRITE 		  2
-`define WRITE_HOLD 	  3
-`define READ_REQUEST  4
-`define READ_LATCH    5
-
-
-// SPARTAN 6
-// CoreSpeed 32Mhz
-// SRAM writting times 
-// tSA  = 4ns;
-// tSCE = 12ns;
-// tHA  = 4ns;
-// SRAM reading times
-// tRC = 20ns
-
-module SRAM_CONTROLLER # ( parameter DATA_WIDTH= 8, parameter ADDR_WIDTH=19 )
-(
-	input wire							Clock,
-	input wire							Reset,
-	
-	//R/W Selection
-	input wire 							iWriteEnable,	     
-	//Enable the SRAM R/W
-	input wire 							iTrigger,		     
-	//Data from MiAlu
-	input wire [ADDR_WIDTH-1:0]		iAddress,           
-	//Data that the guest wants to write into SRAM
-	input wire [DATA_WIDTH-1:0] 		iDataIn,            
-	//Data from SRAM
-	input wire [DATA_WIDTH-1:0]		iSRAMDataIn,        
-	//Data that was read from SRAM
-	output wire [DATA_WIDTH-1:0]		oSRAMDataRead,      
-	//Data that we want to write into SRAM
-	output wire [DATA_WIDTH-1:0] 		oSRAMDataWrite,     
-	//Address to read/write to SRAM
-	output wire [ADDR_WIDTH-1:0]		oSRAMAddressOut,     
-	output reg                      oSRaMWriteEnable
-);
-
-reg wAddrEn, rDataWriteHold ;
-reg rDataReadEn, rDataWriteEn;
-wire [DATA_WIDTH-1:0] wSRAMDataWrite;
-
-
-assign oSRAMDataWrite = ( rDataWriteEn ) ?  wSRAMDataWrite : 8'bz ;
-
-
-FFD_POSEDGE_SYNCRONOUS_RESET # ( ADDR_WIDTH ) FFD_ADDR 
-(
-	.Clock(  Clock        ),
-	.Reset(  Reset        ),
-	.Enable( wAddrEn      ),
-	.D(      iAddress     ),
-	.Q(      oSRAMAddressOut  )
-);
-
-
-FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH ) FFD_DATAOUT 
-(
-	.Clock(  Clock           ),
-	.Reset(  Reset           ),
-	.Enable( rDataWriteHold  ),
-	.D(      iDataIn         ),
-	.Q(      wSRAMDataWrite  )
-);
-
-
-FFD_POSEDGE_SYNCRONOUS_RESET # ( DATA_WIDTH ) FFD_DATAIN 
-(
-	.Clock(  Clock            ),
-	.Reset(  Reset            ),
-	.Enable( rDataReadEn      ),
-	.D(      iSRAMDataIn      ),
-	.Q(      oSRAMDataRead    )
-);
-
-reg [3:0] rCurrentState, rNextState;
-reg [ADDR_WIDTH-1:0]    rNextAddr;
-reg [DATA_WIDTH-1:0]    rNextDataOut;
 
 //Logica de Estado Presente
 always @ ( posedge Clock, posedge Reset )
@@ -254,38 +179,6 @@ begin
 			rDataWriteEn     = 1'b0;
 			rDataWriteHold   = 1'b0;
 			oSRaMWriteEnable = 1'b1;
-NET "oSramAddr<0>" LOC = "P7" | IOSTANDARD=LVTTL | SLEW=FAST;
-NET "oSramAddr<1>" LOC = "P8" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<2>" LOC = "P9" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<3>" LOC = "P10" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<4>" LOC = "P11" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<5>" LOC = "P5" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<6>" LOC = "P2" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<7>" LOC = "P1" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<8>" LOC = "P143" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<9>" LOC = "P142" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<10>" LOC = "P43" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<11>" LOC = "P41" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<12>" LOC = "P40" | IOSTANDARD=LVTTL | SLEW=FAST;
-NET "oSramAddr<13>" LOC = "P35" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<14>" LOC = "P34" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<15>" LOC = "P27" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<16>" LOC = "P29" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<17>" LOC = "P33" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramAddr<18>" LOC = "P32" | IOSTANDARD=LVTTL | SLEW=FAST ;
-#NET "oSramAddr<19>" LOC = "P44" | IOSTANDARD=LVTTL | SLEW=FAST ;
-#NET "oSramAddr<20>" LOC = "P30" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<0>" LOC = "P14" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<1>" LOC = "P15" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<2>" LOC = "P16" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<3>" LOC = "P17" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<4>" LOC = "P21" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<5>" LOC = "P22" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<6>" LOC = "P23" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramData<7>" LOC = "P24" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramCe" LOC = "P12" | IOSTANDARD=LVTTL | SLEW=FAST;
-NET "oSramWe" LOC = "P6" | IOSTANDARD=LVTTL | SLEW=FAST ;
-NET "oSramOe" LOC = "P26" | IOSTANDARD=LVTTL | SLEW=FAST
 			rNextState = `WRITE_HOLD;
 		end
 
@@ -406,6 +299,8 @@ En la simulación se observa como se escriben los datos escritos, ver Figura \re
 \caption{Simulación: Escritura}
 \label{sim_escritura}
 \end{figure}
+
+\newpage
 
 Para leerlos se utilizan los leds. Para lograrlo, se escribe en la ROM lo siguiente:
 
