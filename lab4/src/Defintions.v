@@ -15,9 +15,7 @@
 `define BLE   4'd3
 `define STO   4'd4
 `define ADD   4'd5
-`define SRD   4'd6
-`define SWR   4'd7
-`define JMP   4'd8
+`define JMP   4'd6
 
 `define R0 8'd0
 `define R1 8'd1
@@ -27,5 +25,6 @@
 `define R5 8'd5
 `define R6 8'd6
 `define R7 8'd7
+
 
 `endif

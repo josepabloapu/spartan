@@ -4,91 +4,54 @@
 `include "Collaterals.v"
 `include "Module_ROM.v"
 `include "RAM.v"
-`include "SRAMController.v"
-`define DEBUG 1
 
 
 module MiniAlu
 (
-	input wire Clock,
- 	input wire Reset,
- 	output wire [7:0] oLed,
-// 	output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
- 	`ifdef UART
- 		output wire oUartTx,
- 		input  wire iUartRx,
- 	`endif
-	
-	//SRAM pinout
-	output wire [18:0] oSramAddr,
- 	inout wire [7:0] oSramData,
- 	output wire oSramCe,
- 	output wire oSramWe, 
- 	output wire oSramOe
+ input wire Clock,
+ input wire Reset,
+ output wire [7:0] oLed,
+ output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
+ /*output wire       oUartTx,
+ input  wire       iUartRx,*/
+ output wire oVgaVsync,
+ output wire oVgaHsync
 
-// 	output wire oVgaVsync,
-// 	output wire oVgaHsync
+ 
 );
 
-assign oSramCe = 1'b0;
-assign oSramOe = 1'b0;
+//====== XILINX UART MODULES ================//
+/*reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
+reg                                 rEn_16_X_Baud;
+wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
+wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
+wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
 
-wire [7:0] wSramData;
-
-SRAM_CONTROLLER SRAMController
+assign wUartDataTx          = wUartDataRx;
+assign wUartTxDataAvailable = wUartRxDataAvailable;
+*/
+VgaController VGA
 (
-	.Clock(Clock),
-	.Reset(Reset),
-	.iWriteEnable(rSramWriteEnable),	 //R/W Selection
-	.iTrigger(rTrigger),		     //Enable the SRAM R/W
-	.iAddress(rRequestAddr),         //Data from MiAlu
-	.iDataIn(rRequestData),          //Data that the guest wants to write into SRAM
-	.iSRAMDataIn(oSramData),         //Data from SRAM
-	.oSRAMDataRead(wSramData),       //Data that was read from SRAM
-	.oSRAMDataWrite(oSramData),      //Data that we want to write into SRAM
-	.oSRAMAddressOut(oSramAddr),     //Address to read/write to SRAM
-	.oSRaMWriteEnable(oSramWe)
+.Clock(Clock),
+.Reset(Reset),
+.oVgaRed(oVgaRed),
+.oVgaGreen(oVgaGreen),
+.oVgaBlue(oVgaBlue),
+.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
+.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
+
 );
 
-	
-	
-`ifdef UART
-	//====== XILINX UART MODULES ================//
-	reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
-	reg                                 rEn_16_X_Baud;
-	wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
-	wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
-	wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
-	
-	assign wUartDataTx          = wUartDataRx;
-	assign wUartTxDataAvailable = wUartRxDataAvailable;
-`endif
-
-//Controller VGA
-//(
-//	.Clock(Clock),
-//	.Reset(Reset),
-//	.oVgaRed(oVgaRed),
-//	.oVgaGreen(oVgaGreen),
-//	.oVgaBlue(oVgaBlue),
-//	.oVgaVsync(oVgaVsync),	//Polarity of horizontal sync pulse is negative.
-//	.oVgaHsync( oVgaHsync )	//Polarity of vertical sync pulse is negative.
-//);
-
-wire [15:0] wIP,wIP_temp;
+wire [15:0]  wIP,wIP_temp;
 reg         rWriteEnable,rBranchTaken;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg [15:0]   /*wSourceData0,wSourceData1,*/rResult;
+
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination, wNextDest, wDestinationTemp;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue, wSourceDataTemp0, wSourceDataTemp1, wResultTemp;
-wire [15:0] wResult_Fwd;
 
-// SRAM required wires
-reg  rTrigger;	 
-reg [18:0] rRequestAddr;
-reg [16:0] rRequestData;
-reg rSramWriteEnable;
+wire [15:0] wResult_Fwd;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RSLT_FWD
 (
@@ -98,6 +61,8 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 16 ) FF_RSLT_FWD
 	.D(rResult),
 	.Q(wResult_Fwd)
 );
+
+
 
 ROM InstructionRom 
 (
@@ -166,7 +131,6 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD4
 
 
 reg rFFLedEN;
-`ifndef DEBUG
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 (
 	.Clock(Clock),
@@ -175,9 +139,7 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 	.D( wSourceData1[7:0] ),
 	.Q( oLed    )
 );
-`else 
-assign oLed = oSramData;
-`endif
+
 //Almacenamiento de la dirección destino del proceso anterior del pipeline
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_NDF
 (
@@ -197,6 +159,30 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 assign wSourceData0 = (wSourceAddr0 == wNextDest) ? wResult_Fwd : wSourceDataTemp0;		//selección del dato destino 0
 assign wSourceData1 = (wSourceAddr1 == wNextDest) ? wResult_Fwd : wSourceDataTemp1;		//selección del dato destino 1
 //----------------------------------------------------------------------------
+
+/*FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_Result
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.Enable(rWriteEnable),
+	.D(rResult),
+	.Q(wResultTemp)
+);*/
+
+/*
+always @ ( Clock )
+begin
+	if (wSourceAddr0 == wNextDest) 
+		wSourceData0=rResult;
+	else  
+		wSourceData0=wSourceDataTemp0;
+
+	if (wSourceAddr1 == wNextDest) 
+		wSourceData1=rResult;
+	else  
+		wSourceData1=wSourceDataTemp1;
+end*/
+
 always @ ( * )
 begin
 	case (wOperation)
@@ -206,22 +192,14 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= 0;
 	end
 	//-------------------------------------
 	`ADD:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rSramWriteEnable <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rResult      <= wSourceData1 + wSourceData0;
 	end
 	//-------------------------------------
@@ -229,46 +207,14 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
-		rSramWriteEnable <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= wImmediateValue;
-	end
-	//-------------------------------------
-	`SRD:
-	begin
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rBranchTaken <= 1'b0;
-		rTrigger 	 <= 1'b1;
-		rRequestAddr <= {3'b000,wSourceData0};
-		rRequestData <= 1'b0;
-		rResult      <= {8'b0,wSramData};
-	end
-	//-------------------------------------
-	`SWR:
-	begin
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b1;
-		rBranchTaken <= 1'b0;
-		rTrigger 	 <= 1'b1;
-		rRequestAddr <= {3'b000,wSourceData0};
-		rRequestData <= wSourceData1;
-		rResult      <= 1'b0;
 	end
 	//-------------------------------------
 	`BLE:
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
@@ -281,10 +227,6 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b1;
 	end
@@ -293,10 +235,6 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 	end
@@ -305,10 +243,6 @@ begin
 	begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
-		rSramWriteEnable <= 1'b0;
-		rTrigger 	 <= 1'b0;
-		rRequestAddr <= 1'b0;
-		rRequestData <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 	end	
@@ -323,8 +257,17 @@ end
 //                                                                        //
 ////////////////////////////////////////////////////////////////////////////
 
-`ifdef UART
-wire wPllLocked,wPsDone;
+
+//Instantiate Digital Clock Manager
+/*
+dcm32to96 UART_CLOCK_DCM
+(
+        .CLK_IN1(  Clock ),
+        .CLK_OUT1( wUartClock   )
+);
+*/
+
+/*wire wPllLocked,wPsDone;
 
 DCM_SP 
 #
@@ -383,7 +326,6 @@ uart_tx6 UART_TX
 .en_16_x_baud(        rEn_16_X_Baud        ),
 .serial_out(          oUartTx              )
 );
-`endif
-
+*/
 
 endmodule

@@ -12,13 +12,13 @@ output reg [SIZE-1:0] Q
   always @(posedge Clock )
   begin
       if (Reset)
-        Q <= Initial;
+        Q = Initial;
       else
-		    begin
-		      if (Enable)
-			       Q <= Q + 1;
-           
-		    end			
+		begin
+		if (Enable)
+			Q = Q + 1;
+
+		end			
   end
 
 endmodule

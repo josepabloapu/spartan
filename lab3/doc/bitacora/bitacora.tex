@@ -39,7 +39,7 @@
 \renewcommand{\headrulewidth}{0.4pt} 
 \renewcommand{\footrulewidth}{0.4pt} 
 
-\graphicspath{{../media/}}	%%multimedia path
+\graphicspath{{images/}}	%%multimedia path
 \setlength{\parindent}{0pt}
 %%*************************************************************************
 \begin{document}
@@ -263,8 +263,72 @@ endmodule
 \end{lstlisting}
 Note en la figura siguiente como el simulador reconoce la multiplicación con signo:
 
+%%**********************************************************************
+\section{Prueba}
+Primero se escriben los datos en la SRAM. Para lograrlo, se escribe en la ROM lo siguiente:
 
+\begin{lstlisting}
+...
+4: oInstruction = { `STO , `R4, 8'b0, 8'b11010100};
+5: oInstruction = { `STO , `R5, 8'b0, 8'b11101000};
+...
+7: oInstruction = { `SWR , 8'hff, `R4, `R1};
+...
+11: oInstruction = { `SWR , 8'hff, `R5, `R2};
+...
+\end{lstlisting}
 
+En la simulación se observa como se escriben los datos escritos, ver Figura \ref{sim_escritura}
+
+% Adding an image
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=1\textwidth]{escritura.png}
+\caption{Simulación: Escritura}
+\label{sim_escritura}
+\end{figure}
+
+Para leerlos se utilizan los leds. Para lograrlo, se escribe en la ROM lo siguiente:
+
+\begin{lstlisting}
+...
+17: oInstruction = { `SRD , `R4, 8'hff, `R1};
+...
+21: oInstruction = { `LED , 8'hff, 8'hff, `R4 };
+...
+28: oInstruction = { `SRD , `R5, 8'hff, `R2};
+...
+32: oInstruction = { `LED , 8'hff, 8'hff, `R5 };
+...
+\end{lstlisting}
+
+En las fotografías se observan como los leds ilustran los dos datos escritos y a su vez leidos. Ver Figuras \ref{lectura_1} y \ref{lectura_2}
+
+% Adding an image
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=1\textwidth]{lecturaa.jpg}
+\caption{Lectura del primer dato}
+\label{lectura_1}
+\end{figure}
+
+% Adding an image
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=1\textwidth]{lecturab.jpg}
+\caption{Lectura del segundo dato}
+\label{lectura_2}
+\end{figure}
+\pagebreak
+%%**********************************************************************
+\section{Conlusiones}
+Se logra determinar q apartir de maquinas de estado es posible obtener un mecanismo de lectura y escritura.\\
+Con la ayuda del diagrama de pin-out de la tarjeta papilio, fue posible comunicar la spartan6 con la SRAM.\\
+%%**********************************************************************
+\section{Bibliografía}
+\begin{itemize}
+\item Bib1
+\end{itemize}
 
 \end{document}
 %%*************************************************************************
