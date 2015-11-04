@@ -60,7 +60,16 @@ Jose Apú (B10407), Francisco Molina (B14194), \\Marco Montero (A94000), Dennis 
 \section*{Ejercicio 1}
 Implemente una máquina de estados en el Spartan 6 que cumpla con la temporización necesaria para escribir y leer datos de una memoria SRAM en una plataforma Papilio Duo.\\[0.3 cm]
 
-Para este ejercicio se instanció en la MiniAlu del Spartan 6 el controlador de una SRAM creado a partir de una máquina de estados encargada de manejar las diferentes señales necesarias en los diferentes pines para el correcto funcionamiento de la misma. Posterior a esto se escribió una serie de instrucciones en la MiniAlu de forma que la escritura y la lectura a las diferentes posiciones de la memoria fuera transparente para el usuario. Por último se escribió en la ROM un programa de prueba que escribiera y leyera datos en la memoria y escribiera los ultimos 8 bits en los LEDs de la Papilio Duo.
+Para este ejercicio se instanció en la MiniAlu del Spartan 6 el controlador de una SRAM creado a partir de una máquina de estados encargada de manejar las diferentes señales necesarias en los diferentes pines para el correcto funcionamiento de escritura y lectura sobre la SRAM. Posterior a esto se escribió una serie de instrucciones en la MiniAlu de forma que la escritura y la lectura a las diferentes posiciones de la memoria fuera transparente para el usuario. Por último se escribió en la ROM un programa de prueba que escribiera y leyera datos en la memoria y escribiera los ultimos 8 bits en los LEDs de la Papilio Duo. El Papilio duo, tiene una fpga, un wing que permite usar leds para ver que está leyendo y escribiendo, esto funciona para debuggear. \\
+
+
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width=10cm]{sramcontroller.png}
+\caption{Diagrama Controlador SRAM}
+\label{Con1}
+\end{figure}
 
 
 \begin{figure}[hbtp]
@@ -71,10 +80,7 @@ Para este ejercicio se instanció en la MiniAlu del Spartan 6 el controlador de 
 \end{figure}
 
 
-
-
-papilio duo, tiene fpga, un wing que permite usar leds, ver que esta leyendo y escribiendo con los leds para debuggear. poner pines y comparalos con el utf.
-
+\newpage
 \subsection*{SRAM controller}
 \begin{lstlisting}
 `define LISTEN 		  0
@@ -322,12 +328,12 @@ En las fotografías se observan como los leds ilustran los dos datos escritos y 
 \pagebreak
 %%**********************************************************************
 \section{Conlusiones}
-Se logra determinar q apartir de maquinas de estado es posible obtener un mecanismo de lectura y escritura.\\
-Con la ayuda del diagrama de pin-out de la tarjeta papilio, fue posible comunicar la spartan6 con la SRAM.\\
+Se logra crear un controlador para la SRAM apartir de una máquina de estados, gracias al mismo se puede establecer una comunicación entre la SRAM y la FPGA SPARTAN6 que permite escribir o leer posiciones de está memoria estática. Cabe destacar que además el controlador utilizó el diagrama de pines para lograr esa comunicación física entre ambos.\\
 %%**********************************************************************
 \section{Bibliografía}
 \begin{itemize}
-\item Bib1
+\item Información Papillio Duo.http://papilio.cc/index.php?n=Papilio.PapilioDUOHardwareGuide
+\item Archivos .v descargados del drive del profesor Diego Valverde.
 \end{itemize}
 
 \end{document}
