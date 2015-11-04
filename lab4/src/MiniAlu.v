@@ -12,8 +12,8 @@ module MiniAlu
  input wire Reset,
  output wire [7:0] oLed,
  output wire [3:0] oVgaRed,oVgaGreen,oVgaBlue,
- /*output wire       oUartTx,
- input  wire       iUartRx,*/
+ // output wire       oUartTx,
+ // input  wire       iUartRx,
  output wire oVgaVsync,
  output wire oVgaHsync
 
@@ -21,15 +21,15 @@ module MiniAlu
 );
 
 //====== XILINX UART MODULES ================//
-/*reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
-reg                                 rEn_16_X_Baud;
-wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
-wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
-wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
+// reg [`UART_BAUD_RATE_CNT_SZ:0]      rBaudCount;
+// reg                                 rEn_16_X_Baud;
+// wire [`UART_WORD_OUT_SZ-1:0]        wUartDataRx,wUartDataTx;                        // UART 1 Byte internal signals
+// wire                                wUartRxDataAvailable, wUartTxDataAvailable;             // UART serial input/ouput signals
+// wire                                wUartClock;                                                                                                 // 96Mhz clock used for UART
 
-assign wUartDataTx          = wUartDataRx;
-assign wUartTxDataAvailable = wUartRxDataAvailable;
-*/
+// assign wUartDataTx          = wUartDataRx;
+// assign wUartTxDataAvailable = wUartRxDataAvailable;
+
 VgaController VGA
 (
 .Clock(Clock),
@@ -267,65 +267,65 @@ dcm32to96 UART_CLOCK_DCM
 );
 */
 
-/*wire wPllLocked,wPsDone;
+// wire wPllLocked,wPsDone;
 
-DCM_SP 
-#
-(
-.CLKFX_MULTIPLY(3),	//96
-.CLKFX_DIVIDE(1)		
+// DCM_SP 
+// #
+// (
+// .CLKFX_MULTIPLY(3),	//96
+// .CLKFX_DIVIDE(1)		
 
-)
-ClockUart
-(
-.CLKIN(Clock),				//32Mhz
-.CLKFB(wUartClock), 		//Feed back
-.RST( Reset ),				//Global reset
-.PSEN(1'b0), 				//Disable variable phase shift. Ignore inputs to phase shifter
-.LOCKED(wPllLocked),		//Use this signal to make sure PLL is locked
-.PSDONE(wPsDone),			//I am not really using this one
-.CLKFX(wUartClock)		//FCLKFX = FCLKIN * CLKFX_MULTIPLY / CLKFX_DIVIDE 
+// )
+// ClockUart
+// (
+// .CLKIN(Clock),				//32Mhz
+// .CLKFB(wUartClock), 		//Feed back
+// .RST( Reset ),				//Global reset
+// .PSEN(1'b0), 				//Disable variable phase shift. Ignore inputs to phase shifter
+// .LOCKED(wPllLocked),		//Use this signal to make sure PLL is locked
+// .PSDONE(wPsDone),			//I am not really using this one
+// .CLKFX(wUartClock)		//FCLKFX = FCLKIN * CLKFX_MULTIPLY / CLKFX_DIVIDE 
 
-);
-
-
-//--------------------------------------------------
-always @ (posedge wUartClock )
-begin
-        if (rBaudCount == 1)
-        begin
-                rBaudCount    = 1'b0;
-                rEn_16_X_Baud = 1'b1;
-        end
-        else
-        begin
-                rBaudCount    = rBaudCount + 1'b1;
-                rEn_16_X_Baud = 1'b0;
-        end
-
-end
-
-uart_rx6 UART_RX
-(
-.serial_in(           iUartRx              ),
-.en_16_x_baud(        rEn_16_X_Baud        ),
-.data_out(            wUartDataRx          ), //8 bits
-.buffer_read(         1'b1                 ),
-.buffer_data_present( wUartRxDataAvailable ), //8 bits from UART became available for reading
-.buffer_reset(        1'b0                 ),
-.clk(                 wUartClock           )
-);
+// );
 
 
-uart_tx6 UART_TX
-(
-.data_in(             wUartDataTx          ),   //Amaze yourself! put any 8b'char in here and see the magic
-.buffer_write(        wUartTxDataAvailable ),
-.buffer_reset(        1'b0                 ),
-.clk(                 wUartClock           ),
-.en_16_x_baud(        rEn_16_X_Baud        ),
-.serial_out(          oUartTx              )
-);
-*/
+// //--------------------------------------------------
+// always @ (posedge wUartClock )
+// begin
+//         if (rBaudCount == 1)
+//         begin
+//                 rBaudCount    = 1'b0;
+//                 rEn_16_X_Baud = 1'b1;
+//         end
+//         else
+//         begin
+//                 rBaudCount    = rBaudCount + 1'b1;
+//                 rEn_16_X_Baud = 1'b0;
+//         end
+
+// end
+
+// uart_rx6 UART_RX
+// (
+// .serial_in(           iUartRx              ),
+// .en_16_x_baud(        rEn_16_X_Baud        ),
+// .data_out(            wUartDataRx          ), //8 bits
+// .buffer_read(         1'b1                 ),
+// .buffer_data_present( wUartRxDataAvailable ), //8 bits from UART became available for reading
+// .buffer_reset(        1'b0                 ),
+// .clk(                 wUartClock           )
+// );
+
+
+// uart_tx6 UART_TX
+// (
+// .data_in(             wUartDataTx          ),   //Amaze yourself! put any 8b'char in here and see the magic
+// .buffer_write(        wUartTxDataAvailable ),
+// .buffer_reset(        1'b0                 ),
+// .clk(                 wUartClock           ),
+// .en_16_x_baud(        rEn_16_X_Baud        ),
+// .serial_out(          oUartTx              )
+// );
+
 
 endmodule
