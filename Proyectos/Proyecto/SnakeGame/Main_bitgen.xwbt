@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/home/guengo/Desktop/Proyecto/SnakeGame/Main.ncd
+OUTFILE=/home/guengo/Desktop/Proyecto/SnakeGame/Main.bit
+FAMILY=Spartan6
+PART=xc6slx9-2tqg144
+WORKINGDIR=/home/guengo/Desktop/Proyecto/SnakeGame
+LICENSE=WebPack
+USER_INFO=211079853_0_0_819

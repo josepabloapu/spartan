@@ -1,0 +1,85 @@
+
+
+module SnakeMovement
+(
+	input wire Clock,
+	input wire Reset,
+	input wire iGameOver,
+	input wire iWest,
+	input wire iEast,
+	input wire iNorth,
+	input wire iSouth,
+	input wire [7:0] iSnakeLenght,
+	output wire [7:0] oSnakeLocationX,
+	output wire [7:0] oSnakeLocationY,
+	output reg oIconTick,
+	output reg oCtrlOff
+);
+
+parameter SnakeCont1 = 28'd9_999_999; 
+parameter SnakeCont2 = 28'd5_999_999; 
+parameter SnakeCont3 = 28'd1_999_999; 
+
+reg [7:0] rLocSX ,rLocSY;
+reg [3:0] rCurrentHeading,rUserInput; //Keeps track of the user inputs and current heading direction of thesnake 
+reg [28:0] rTickInc = 28'h0;
+reg [28:0] rSnakeSpeed = snake_cnt1; // register to store the speed with which the snake is moving
+reg [31:0] k;
+
+always  @(posedge Clock)
+begin
+	if(rTickInc == rSnakeSpeed)
+	begin
+		oIconTick <= 1'b1;
+		rTickInc  <= 1'b0;
+	end
+	else 
+	begin
+		rTickInc  <= rTickInc + 1'b1;
+		oIconTick <= 1'b0;
+	end
+end
+
+always @(*)
+begin
+	if(iWest == 1'b1 && oCtrlOff == 1'b0)
+		rUserInput = `Weast;
+	if(iEast == 1'b1 && oCtrlOff == 1'b0)
+		rUserInput = `East;
+	if(iNorth == 1'b1 && oCtrlOff == 1'b0)
+		rUserInput = `North;
+	if(iSouth == 1'b1 && oCtrlOff == 1'b0)
+		rUserInput = `South;
+end
+
+always @(posedge oIconTick)
+begin
+	if(iSnakeLenght >= 8'd6 && iSnakeLenght <= 8'd8)
+		rSnakeSpeed = rSnakeCont1;
+	else if(iSnakeLenght >= 8'd13 && iSnakeLenght <= 8'd14)
+		rSnakeSpeed = rSnakeCont2;
+	else 
+		rSnakeSpeed = rSnakeCont3;
+
+	if(rUserInput == `Weast && rCurrentHeading != `Weast && rCurrentHeading != `East)
+		rCurrentHeading = `Weast;
+
+	else if(rUserInput == `East && rCurrentHeading != `Weast && rCurrentHeading != `East)
+		rCurrentHeading = `East;
+
+	else if(rUserInput == `North && rCurrentHeading != `North && rCurrentHeading != `South)
+		rCurrentHeading = `North;
+
+	else if(rUserInput == `South && rCurrentHeading != `North && rCurrentHeading != `South)
+		rCurrentHeading = `South;
+	
+	if(Reset)
+	begin
+		rLocSX = 8'd64;
+		rLocsY = 8'd64;
+	end
+	else
+	begin
+		case(rCurrentHeading)
+		`Weast:rLocSX = rLocSX - 1;
+		`East:rLocSX = rLocSX

@@ -1,0 +1,677 @@
+--------------------------------------------------------------------------------
+Release 14.7 Trace  (lin)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+
+/home/guengo/14.7/ISE_DS/ISE/bin/lin/unwrapped/trce -intstyle ise -v 3 -s 2 -n
+3 -fastpaths -xml Main.twx Main.ncd -o Main.twr Main.pcf
+
+Design file:              Main.ncd
+Physical constraint file: Main.pcf
+Device,package,speed:     xc6slx9,tqg144,C,-2 (PRODUCTION 1.23 2013-10-13)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+INFO:Timing:3412 - To improve timing, see the Timing Closure User Guide (UG612).
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+
+================================================================================
+Timing constraint: NET "Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+ Minimum period is  16.000ns.
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: NET "Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 15.250ns (period - (min low pulse limit / (low pulse / period)))
+  Period: 31.250ns
+  Low pulse: 15.625ns
+  Low pulse limit: 8.000ns (Tdcmpw_CLKIN_25_50)
+  Physical resource: VGA/ClockVga/CLKIN
+  Logical resource: VGA/ClockVga/CLKIN
+  Location pin: DCM_X0Y2.CLKIN
+  Clock network: VGA/ClockVga_ML_NEW_DIVCLK
+--------------------------------------------------------------------------------
+Slack: 15.250ns (period - (min high pulse limit / (high pulse / period)))
+  Period: 31.250ns
+  High pulse: 15.625ns
+  High pulse limit: 8.000ns (Tdcmpw_CLKIN_25_50)
+  Physical resource: VGA/ClockVga/CLKIN
+  Logical resource: VGA/ClockVga/CLKIN
+  Location pin: DCM_X0Y2.CLKIN
+  Clock network: VGA/ClockVga_ML_NEW_DIVCLK
+--------------------------------------------------------------------------------
+Slack: 28.250ns (period - min period limit)
+  Period: 31.250ns
+  Min period limit: 3.000ns (333.333MHz) (Tdcmper_CLKIN)
+  Physical resource: VGA/ClockVga/CLKIN
+  Logical resource: VGA/ClockVga/CLKIN
+  Location pin: DCM_X0Y2.CLKIN
+  Clock network: VGA/ClockVga_ML_NEW_DIVCLK
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: PERIOD analysis for net "VgaClock" derived from  NET 
+"Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;  multiplied by 1.28 to 40 nS and duty 
+cycle corrected to HIGH 20 nS  
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 9841 paths analyzed, 214 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 setup errors, 0 hold errors, 0 component switching limit errors)
+ Minimum period is  11.512ns.
+--------------------------------------------------------------------------------
+
+Paths for end point color/oRGB_7 (SLICE_X10Y33.D1), 2222 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     28.488ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_7 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.242ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_7
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X4Y12.B6       net (fanout=126)      4.731   VGA/COLCOUNTER/Q<4>
+    SLICE_X4Y12.DMUX     Topbd                 0.695   Icon/iPixelCol[10]_rBodyStack[49][21]_equal_467_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[49][21]_equal_467_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[49][21]_equal_467_o_cy<7>
+    SLICE_X14Y28.C2      net (fanout=1)        2.864   Icon/iPixelCol[10]_rBodyStack[49][21]_equal_467_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.D1      net (fanout=2)        1.329   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1021
+                                                       color/oRGB_7
+    -------------------------------------------------  ---------------------------
+    Total                                     11.242ns (2.309ns logic, 8.933ns route)
+                                                       (20.5% logic, 79.5% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     28.623ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_7 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.107ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_7
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X6Y3.B2        net (fanout=126)      5.004   VGA/COLCOUNTER/Q<4>
+    SLICE_X6Y3.DMUX      Topbd                 0.624   Icon/iPixelCol[10]_rBodyStack[50][21]_equal_468_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[50][21]_equal_468_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[50][21]_equal_468_o_cy<7>
+    SLICE_X14Y28.C4      net (fanout=1)        2.527   Icon/iPixelCol[10]_rBodyStack[50][21]_equal_468_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.D1      net (fanout=2)        1.329   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1021
+                                                       color/oRGB_7
+    -------------------------------------------------  ---------------------------
+    Total                                     11.107ns (2.238ns logic, 8.869ns route)
+                                                       (20.1% logic, 79.9% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     28.632ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_7 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.098ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_7
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X6Y6.B6        net (fanout=126)      5.035   VGA/COLCOUNTER/Q<4>
+    SLICE_X6Y6.DMUX      Topbd                 0.624   Icon/iPixelCol[10]_rBodyStack[52][21]_equal_470_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[52][21]_equal_470_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[52][21]_equal_470_o_cy<7>
+    SLICE_X14Y28.C3      net (fanout=1)        2.487   Icon/iPixelCol[10]_rBodyStack[52][21]_equal_470_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.D1      net (fanout=2)        1.329   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1021
+                                                       color/oRGB_7
+    -------------------------------------------------  ---------------------------
+    Total                                     11.098ns (2.238ns logic, 8.860ns route)
+                                                       (20.2% logic, 79.8% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point color/oRGB_3 (SLICE_X10Y33.A1), 2222 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     28.504ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.226ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X4Y12.B6       net (fanout=126)      4.731   VGA/COLCOUNTER/Q<4>
+    SLICE_X4Y12.DMUX     Topbd                 0.695   Icon/iPixelCol[10]_rBodyStack[49][21]_equal_467_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[49][21]_equal_467_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[49][21]_equal_467_o_cy<7>
+    SLICE_X14Y28.C2      net (fanout=1)        2.864   Icon/iPixelCol[10]_rBodyStack[49][21]_equal_467_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.A1      net (fanout=2)        1.313   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     11.226ns (2.309ns logic, 8.917ns route)
+                                                       (20.6% logic, 79.4% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     28.639ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.091ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X6Y3.B2        net (fanout=126)      5.004   VGA/COLCOUNTER/Q<4>
+    SLICE_X6Y3.DMUX      Topbd                 0.624   Icon/iPixelCol[10]_rBodyStack[50][21]_equal_468_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[50][21]_equal_468_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[50][21]_equal_468_o_cy<7>
+    SLICE_X14Y28.C4      net (fanout=1)        2.527   Icon/iPixelCol[10]_rBodyStack[50][21]_equal_468_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.A1      net (fanout=2)        1.313   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     11.091ns (2.238ns logic, 8.853ns route)
+                                                       (20.2% logic, 79.8% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     28.648ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_4 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      11.082ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_4 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.CMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_4
+    SLICE_X6Y6.B6        net (fanout=126)      5.035   VGA/COLCOUNTER/Q<4>
+    SLICE_X6Y6.DMUX      Topbd                 0.624   Icon/iPixelCol[10]_rBodyStack[52][21]_equal_470_o
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[52][21]_equal_470_o_lut<5>
+                                                       Icon/Mcompar_iPixelCol[10]_rBodyStack[52][21]_equal_470_o_cy<7>
+    SLICE_X14Y28.C3      net (fanout=1)        2.487   Icon/iPixelCol[10]_rBodyStack[52][21]_equal_470_o
+    SLICE_X14Y28.COUT    Topcyc                0.325   Icon/_n7534_wg_cy<7>
+                                                       Icon/_n7534_wg_lut<6>
+                                                       Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<7>
+    SLICE_X14Y29.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<11>
+                                                       Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<11>
+    SLICE_X14Y30.COUT    Tbyp                  0.091   Icon/_n7534_wg_cy<15>
+                                                       Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.CIN     net (fanout=1)        0.003   Icon/_n7534_wg_cy<15>
+    SLICE_X14Y31.AMUX    Tcina                 0.240   color/oRGB<11>
+                                                       Icon/_n7534_wg_cy<16>
+    SLICE_X10Y33.A1      net (fanout=2)        1.313   wIcon<0>
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     11.082ns (2.238ns logic, 8.844ns route)
+                                                       (20.2% logic, 79.8% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point color/oRGB_3 (SLICE_X10Y33.A4), 454 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     28.886ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_0 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      10.844ns (Levels of Logic = 5)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_0 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.AMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_0
+    SLICE_X14Y1.B4       net (fanout=115)      3.183   VGA/COLCOUNTER/Q<0>
+    SLICE_X14Y1.BMUX     Tilo                  0.298   VGA/_n00561
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1_SW0
+    SLICE_X13Y31.A4      net (fanout=1)        2.449   N18
+    SLICE_X13Y31.A       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1410
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1
+    SLICE_X21Y29.A5      net (fanout=3)        1.163   World/GND_8_o_iPixelCol[10]_LessThan_113_o
+    SLICE_X21Y29.A       Tilo                  0.259   World/Mmux_oSnakeWorldPixeles2113
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C4      net (fanout=1)        0.907   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1453
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.A4      net (fanout=1)        1.200   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     10.844ns (1.942ns logic, 8.902ns route)
+                                                       (17.9% logic, 82.1% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     29.168ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_2 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      10.562ns (Levels of Logic = 5)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_2 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.BMUX    Tshcko                0.518   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_2
+    SLICE_X14Y1.B3       net (fanout=122)      2.901   VGA/COLCOUNTER/Q<2>
+    SLICE_X14Y1.BMUX     Tilo                  0.298   VGA/_n00561
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1_SW0
+    SLICE_X13Y31.A4      net (fanout=1)        2.449   N18
+    SLICE_X13Y31.A       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1410
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1
+    SLICE_X21Y29.A5      net (fanout=3)        1.163   World/GND_8_o_iPixelCol[10]_LessThan_113_o
+    SLICE_X21Y29.A       Tilo                  0.259   World/Mmux_oSnakeWorldPixeles2113
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C4      net (fanout=1)        0.907   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1453
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.A4      net (fanout=1)        1.200   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     10.562ns (1.942ns logic, 8.620ns route)
+                                                       (18.4% logic, 81.6% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     29.179ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               VGA/COLCOUNTER/Q_1 (FF)
+  Destination:          color/oRGB_3 (FF)
+  Requirement:          40.000ns
+  Data Path Delay:      10.551ns (Levels of Logic = 5)
+  Clock Path Skew:      -0.007ns (0.715 - 0.722)
+  Source Clock:         VgaClock_BUFG rising at 0.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.263ns
+
+  Clock Uncertainty:          0.263ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Total Input Jitter (TIJ):   0.000ns
+    Discrete Jitter (DJ):       0.456ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: VGA/COLCOUNTER/Q_1 to color/oRGB_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X21Y31.AQ      Tcko                  0.430   VGA/COLCOUNTER/Q<7>
+                                                       VGA/COLCOUNTER/Q_1
+    SLICE_X14Y1.B2       net (fanout=120)      2.978   VGA/COLCOUNTER/Q<1>
+    SLICE_X14Y1.BMUX     Tilo                  0.298   VGA/_n00561
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1_SW0
+    SLICE_X13Y31.A4      net (fanout=1)        2.449   N18
+    SLICE_X13Y31.A       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1410
+                                                       World/GND_8_o_iPixelCol[10]_LessThan_113_o1
+    SLICE_X21Y29.A5      net (fanout=3)        1.163   World/GND_8_o_iPixelCol[10]_LessThan_113_o
+    SLICE_X21Y29.A       Tilo                  0.259   World/Mmux_oSnakeWorldPixeles2113
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C4      net (fanout=1)        0.907   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1461
+    SLICE_X13Y29.C       Tilo                  0.259   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1453
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.A4      net (fanout=1)        1.200   color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1468
+    SLICE_X10Y33.CLK     Tas                   0.349   color/oRGB<7>
+                                                       color/Mmux_iSnakeWorldPixel[1]_iIcon[2]_mux_8_OUT1469
+                                                       color/oRGB_3
+    -------------------------------------------------  ---------------------------
+    Total                                     10.551ns (1.854ns logic, 8.697ns route)
+                                                       (17.6% logic, 82.4% route)
+
+--------------------------------------------------------------------------------
+
+Hold Paths: PERIOD analysis for net "VgaClock" derived from
+ NET "Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;
+ multiplied by 1.28 to 40 nS and duty cycle corrected to HIGH 20 nS 
+
+--------------------------------------------------------------------------------
+
+Paths for end point Move/rTickInc_28 (SLICE_X20Y60.A6), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.503ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Move/rTickInc_28 (FF)
+  Destination:          Move/rTickInc_28 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.503ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         VgaClock_BUFG rising at 40.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path at Fast Process Corner: Move/rTickInc_28 to Move/rTickInc_28
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y60.AQ      Tcko                  0.234   Move/rTickInc<28>
+                                                       Move/rTickInc_28
+    SLICE_X20Y60.A6      net (fanout=2)        0.026   Move/rTickInc<28>
+    SLICE_X20Y60.CLK     Tah         (-Th)    -0.243   Move/rTickInc<28>
+                                                       Move/rTickInc<28>_rt
+                                                       Move/Mcount_rTickInc_xor<28>
+                                                       Move/rTickInc_28
+    -------------------------------------------------  ---------------------------
+    Total                                      0.503ns (0.477ns logic, 0.026ns route)
+                                                       (94.8% logic, 5.2% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Move/rTickInc_17 (SLICE_X20Y57.B5), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.537ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Move/rTickInc_17 (FF)
+  Destination:          Move/rTickInc_17 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.537ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         VgaClock_BUFG rising at 40.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path at Fast Process Corner: Move/rTickInc_17 to Move/rTickInc_17
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y57.BQ      Tcko                  0.234   Move/rTickInc<19>
+                                                       Move/rTickInc_17
+    SLICE_X20Y57.B5      net (fanout=2)        0.066   Move/rTickInc<17>
+    SLICE_X20Y57.CLK     Tah         (-Th)    -0.237   Move/rTickInc<19>
+                                                       Move/rTickInc<17>_rt
+                                                       Move/Mcount_rTickInc_cy<19>
+                                                       Move/rTickInc_17
+    -------------------------------------------------  ---------------------------
+    Total                                      0.537ns (0.471ns logic, 0.066ns route)
+                                                       (87.7% logic, 12.3% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Move/rTickInc_25 (SLICE_X20Y59.B5), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.537ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Move/rTickInc_25 (FF)
+  Destination:          Move/rTickInc_25 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.537ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         VgaClock_BUFG rising at 40.000ns
+  Destination Clock:    VgaClock_BUFG rising at 40.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path at Fast Process Corner: Move/rTickInc_25 to Move/rTickInc_25
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y59.BQ      Tcko                  0.234   Move/rTickInc<27>
+                                                       Move/rTickInc_25
+    SLICE_X20Y59.B5      net (fanout=2)        0.066   Move/rTickInc<25>
+    SLICE_X20Y59.CLK     Tah         (-Th)    -0.237   Move/rTickInc<27>
+                                                       Move/rTickInc<25>_rt
+                                                       Move/Mcount_rTickInc_cy<27>
+                                                       Move/rTickInc_25
+    -------------------------------------------------  ---------------------------
+    Total                                      0.537ns (0.471ns logic, 0.066ns route)
+                                                       (87.7% logic, 12.3% route)
+
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: PERIOD analysis for net "VgaClock" derived from
+ NET "Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;
+ multiplied by 1.28 to 40 nS and duty cycle corrected to HIGH 20 nS 
+
+--------------------------------------------------------------------------------
+Slack: 37.000ns (period - min period limit)
+  Period: 40.000ns
+  Min period limit: 3.000ns (333.333MHz) (Tdcmper_CLKFX)
+  Physical resource: VGA/ClockVga/CLKFX
+  Logical resource: VGA/ClockVga/CLKFX
+  Location pin: DCM_X0Y2.CLKFX
+  Clock network: VgaClock
+--------------------------------------------------------------------------------
+Slack: 37.334ns (period - min period limit)
+  Period: 40.000ns
+  Min period limit: 2.666ns (375.094MHz) (Tbcper_I)
+  Physical resource: VgaClock_BUFG/I0
+  Logical resource: VgaClock_BUFG/I0
+  Location pin: BUFGMUX_X2Y3.I0
+  Clock network: VgaClock
+--------------------------------------------------------------------------------
+Slack: 38.948ns (period - min period limit)
+  Period: 40.000ns
+  Min period limit: 1.052ns (950.570MHz) (Tbufper_I)
+  Physical resource: SP6_INS_BUFIO2FB_DCM_ML_BUFIO2FB_1/I
+  Logical resource: SP6_INS_BUFIO2FB_DCM_ML_BUFIO2FB_1/I
+  Location pin: BUFIO2FB_X4Y21.I
+  Clock network: VgaClock_BUFG
+--------------------------------------------------------------------------------
+
+
+Derived Constraint Report
+Derived Constraints for Clock_IBUFG
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|                               |   Period    |       Actual Period       |      Timing Errors        |      Paths Analyzed       |
+|           Constraint          | Requirement |-------------+-------------|-------------+-------------|-------------+-------------|
+|                               |             |   Direct    | Derivative  |   Direct    | Derivative  |   Direct    | Derivative  |
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|Clock_IBUFG                    |     31.250ns|     16.000ns|      8.994ns|            0|            0|            0|         9841|
+| VgaClock                      |     40.000ns|     11.512ns|          N/A|            0|            0|         9841|            0|
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+
+All constraints were met.
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Clock to Setup on destination clock Clock
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+Clock          |   11.512|         |         |         |
+---------------+---------+---------+---------+---------+
+
+
+Timing summary:
+---------------
+
+Timing errors: 0  Score: 0  (Setup/Max: 0, Hold: 0)
+
+Constraints cover 9841 paths, 0 nets, and 3254 connections
+
+Design statistics:
+   Minimum period:  16.000ns{1}   (Maximum frequency:  62.500MHz)
+
+
+------------------------------------Footnotes-----------------------------------
+1)  The minimum period statistic assumes all single cycle delays.
+
+Analysis completed Sun Nov 22 13:29:36 2015 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 156 MB
+
+
+

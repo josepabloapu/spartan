@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/guengo/Desktop/Proyecto/SnakeGame/TestBench_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="TestBench" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="12" />
+   <wave_markers>
+      <marker time="5190000000" label="" />
+      <marker time="30165000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/TestBench/oVgaVsync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oVgaVsync</obj_property>
+      <obj_property name="ObjectShortName">oVgaVsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/oVgaHsync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oVgaHsync</obj_property>
+      <obj_property name="ObjectShortName">oVgaHsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/R" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">R[3:0]</obj_property>
+      <obj_property name="ObjectShortName">R[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/G" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">G[3:0]</obj_property>
+      <obj_property name="ObjectShortName">G[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[3:0]</obj_property>
+      <obj_property name="ObjectShortName">B[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/Clock" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Clock</obj_property>
+      <obj_property name="ObjectShortName">Clock</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/Reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Reset</obj_property>
+      <obj_property name="ObjectShortName">Reset</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/E" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">E</obj_property>
+      <obj_property name="ObjectShortName">E</obj_property>
+   </wvobject>
+   <wvobject fp_name="group29" type="group">
+      <obj_property name="label">Move</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/TestBench/Test/Move/rTickInc" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rTickInc[28:0]</obj_property>
+         <obj_property name="ObjectShortName">rTickInc[28:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/oSnakeLocationX" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oSnakeLocationX[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oSnakeLocationX[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/oSnakeLocationY" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oSnakeLocationY[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oSnakeLocationY[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/oIconTick" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oIconTick</obj_property>
+         <obj_property name="ObjectShortName">oIconTick</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/oCtrlOff" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oCtrlOff</obj_property>
+         <obj_property name="ObjectShortName">oCtrlOff</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/rLocSX" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rLocSX[10:0]</obj_property>
+         <obj_property name="ObjectShortName">rLocSX[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/rLocSY" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rLocSY[10:0]</obj_property>
+         <obj_property name="ObjectShortName">rLocSY[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Move/rCurrentHeading" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rCurrentHeading[3:0]</obj_property>
+         <obj_property name="ObjectShortName">rCurrentHeading[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group12" type="group">
+      <obj_property name="label">Icon</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/TestBench/Test/Icon/rBodyStack[0]" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">[0,21:0]</obj_property>
+         <obj_property name="ObjectShortName">rBodyStack[0,21:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/Clock" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">Clock</obj_property>
+         <obj_property name="ObjectShortName">Clock</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iIconTick" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">iIconTick</obj_property>
+         <obj_property name="ObjectShortName">iIconTick</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iPixelRow" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iPixelRow[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iPixelRow[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iPixelCol" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iPixelCol[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iPixelCol[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iLocationX" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iLocationX[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iLocationX[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iLocationY" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iLocationY[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iLocationY[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iFoodLocationX" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iFoodLocationX[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iFoodLocationX[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/iFoodLocationY" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iFoodLocationY[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iFoodLocationY[10:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/oIcon" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oIcon[2:0]</obj_property>
+         <obj_property name="ObjectShortName">oIcon[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/oSnakeLenght" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oSnakeLenght[7:0]</obj_property>
+         <obj_property name="ObjectShortName">oSnakeLenght[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/oGameOver" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oGameOver</obj_property>
+         <obj_property name="ObjectShortName">oGameOver</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/oFoodGen" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oFoodGen</obj_property>
+         <obj_property name="ObjectShortName">oFoodGen</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/Icon/rBodyStack" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rBodyStack[100:0,21:0]</obj_property>
+         <obj_property name="ObjectShortName">rBodyStack[100:0,21:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group20" type="group">
+      <obj_property name="label">World</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/TestBench/Test/World/rLocationXTemp" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rLocationXTemp[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rLocationXTemp[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/rLocationYTemp" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">rLocationYTemp[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rLocationYTemp[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/x" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">x[7:0]</obj_property>
+         <obj_property name="ObjectShortName">x[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/y" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">y[7:0]</obj_property>
+         <obj_property name="ObjectShortName">y[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/oFoodLocationX" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oFoodLocationX[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oFoodLocationX[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/oFoodLocationY" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oFoodLocationY[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oFoodLocationY[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/oFoodIcon" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oFoodIcon[1:0]</obj_property>
+         <obj_property name="ObjectShortName">oFoodIcon[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/oSnakeWorldPixeles" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oSnakeWorldPixeles[1:0]</obj_property>
+         <obj_property name="ObjectShortName">oSnakeWorldPixeles[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/iPixelRow" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iPixelRow[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iPixelRow[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/iPixelCol" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iPixelCol[10:0]</obj_property>
+         <obj_property name="ObjectShortName">iPixelCol[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/iSnakeLenght" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">iSnakeLenght[7:0]</obj_property>
+         <obj_property name="ObjectShortName">iSnakeLenght[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/World/iRandEn" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">iRandEn</obj_property>
+         <obj_property name="ObjectShortName">iRandEn</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group41" type="group">
+      <obj_property name="label">Vga</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/TestBench/Test/VGA/oVideoOn" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oVideoOn</obj_property>
+         <obj_property name="ObjectShortName">oVideoOn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/VGA/oColCurrent" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oColCurrent[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oColCurrent[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/Test/VGA/oRowCurrent" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">oRowCurrent[10:0]</obj_property>
+         <obj_property name="ObjectShortName">oRowCurrent[10:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

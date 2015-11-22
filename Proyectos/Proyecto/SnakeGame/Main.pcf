@@ -1,0 +1,31 @@
+//! **************************************************************************
+// Written by: Map P.20131013 on Sun Nov 22 13:27:09 2015
+//! **************************************************************************
+
+SCHEMATIC START;
+PROHIBIT = SITE "P144";
+PROHIBIT = SITE "P69";
+PROHIBIT = SITE "P60";
+COMP "oGreen<0>" LOCATE = SITE "P78" LEVEL 1;
+COMP "oGreen<1>" LOCATE = SITE "P80" LEVEL 1;
+COMP "oGreen<2>" LOCATE = SITE "P82" LEVEL 1;
+COMP "oGreen<3>" LOCATE = SITE "P84" LEVEL 1;
+COMP "oVgaHsync" LOCATE = SITE "P39" LEVEL 1;
+COMP "oVgaVsync" LOCATE = SITE "P48" LEVEL 1;
+COMP "oRed<0>" LOCATE = SITE "P98" LEVEL 1;
+COMP "oRed<1>" LOCATE = SITE "P95" LEVEL 1;
+COMP "oRed<2>" LOCATE = SITE "P92" LEVEL 1;
+COMP "oRed<3>" LOCATE = SITE "P87" LEVEL 1;
+COMP "Clock" LOCATE = SITE "P94" LEVEL 1;
+COMP "Reset" LOCATE = SITE "P116" LEVEL 1;
+COMP "iEast" LOCATE = SITE "P131" LEVEL 1;
+COMP "iWest" LOCATE = SITE "P134" LEVEL 1;
+COMP "oBlue<0>" LOCATE = SITE "P51" LEVEL 1;
+COMP "oBlue<1>" LOCATE = SITE "P61" LEVEL 1;
+COMP "oBlue<2>" LOCATE = SITE "P66" LEVEL 1;
+COMP "oBlue<3>" LOCATE = SITE "P74" LEVEL 1;
+COMP "iNorth" LOCATE = SITE "P132" LEVEL 1;
+COMP "iSouth" LOCATE = SITE "P133" LEVEL 1;
+NET "Clock_IBUFG" PERIOD = 31.25 ns HIGH 50%;
+SCHEMATIC END;
+

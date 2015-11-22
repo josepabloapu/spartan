@@ -1,0 +1,7 @@
+verilog isim_temp "../src/SnakeWorld.v"
+verilog isim_temp "../src/SnakeMovement.v"
+verilog isim_temp "../src/SnakeIcon.v"
+verilog isim_temp "../src/Colores.v"
+verilog isim_temp "../src/SnakeMain.v"
+verilog isim_temp "TestBench.v"
+verilog isim_temp "/home/guengo/14.7/ISE_DS/ISE//verilog/src/glbl.v"
