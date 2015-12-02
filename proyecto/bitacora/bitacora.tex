@@ -139,6 +139,41 @@ end
 
 Este modulo se divide en tres módulos. El primero que genera la serpiente, otro que controla el movimiento y el otro que une estos dos módulos.
 
+\subsubsection{SnakeIcon}
+
+La serpiente se forma por un arreglo de cuadros (pixeles). En un inicio cuenta con 25 cuadros y puede llegar a un máximo de 100.\\
+
+Cuando la serpiente se come una comida, el cuadro nuevo adopta el valor del cuadro anterior. Por ejemplo si tengo 30 cuadros, y como comida el cuadro 31 para a ser el cuadro 30, el 30 pasa hacer 29 hasta llegar al cuadro cero que toma e valor de la comida.\\
+
+Este módulo también se encarga de verificar si uno pierde la partida, ya sea si se tocó así mismo o toco una pared.
+
+\begin{lstlisting}
+//Cuando toca una pared
+		if (oSnakeLenght >= 8'd26 || iLocationX <= 11'd192 ||  
+		                             iLocationX >= 11'd449 || 
+		                             iLocationY <= 11'd112 || 
+		                             iLocationY >= 11'd368)
+			oGameOver = 1;
+		else
+			oGameOver = 0;
+
+//Cuando se come asi mismo			
+		for(j=100;j>=2;j=j-1) 
+		begin
+			//revisa si la cabeza tiene un valor igual a alguno del cuerpo 
+			if(rBodyStack[0] == rBodyStack[j] && j <= oSnakeLenght)
+				oGameOver = 1;
+			else
+				oGameOver = oGameOver;
+		end	
+\end{lstlisting}
+		 
+\subsubsection{SnakeMovement}
+
+
+\subsubsection{SnakeMain}
+
+
 %%**********************************************************************
 \section{Resultados}
 
