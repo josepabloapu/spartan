@@ -105,7 +105,26 @@ assign oVgaHsync = (wCtemp >= (VisibleHArea + FrontHPorch) &&
 wCtemp <= (VisibleHArea + FrontHPorch + SyncHPulse))? 0:1;
 \end{lstlisting}
 
+Por otra parte se ocupa un generador de señales, ya que tiene que trabajar a una frecuencia determinada. Para eso se utilizóun DCM:
 
+\begin{lstlisting}
+DCM_SP # (
+.CLKFX_MULTIPLY(25),	
+.CLKFX_DIVIDE(32)		
+)
+
+ClockVga (
+.CLKIN(Clock),			
+.CLKFB(wVgaClock), 	
+.RST( Reset ),			
+.PSEN(1'b0), 			
+.LOCKED(wPllLock),	//Para bloquear el Pll.
+.PSDONE(wPsDone),	
+.CLKFX(wVgaClock)		 
+)
+\end{lstlisting}
+
+Por último se ocupab los valores RGB, los que definen el color del pixel. Estos datos se controlan con los otros módulos.
 
 
 %%**************************************************
@@ -169,10 +188,44 @@ Este módulo también se encarga de verificar si uno pierde la partida, ya sea s
 \end{lstlisting}
 		 
 \subsubsection{SnakeMovement}
+Este módulo se encarga de cambiar el estado de dirección. Esta North, South, West, East. Estos estados se cambian al darle click a cualquier de las cuatro botones de la papilio. Por ejemplo si se da click al boton de arriba el estado cambia a North, si estaba en North lo mantiene.
 
+\begin{lstlisting}
+always @(*)
+begin
+	if(iWest == 1'b1)
+		rUserInput = `West;
+	else if(iEast == 1'b1)
+		rUserInput = `East;
+	else if(iSouth == 1'b1) 
+		rUserInput = `South;
+	else if(iNorth == 1'b1)
+		rUserInput = `North;
+	else	
+		rUserInput = rUserInput;
+end
+\end{lstlisting}
+
+También controla la velocidad y lo más importante, el movimiento. Dependiendo del estado va agrendando un más uno dependiendo del estado de dirección que esté. Importante aclarar que no se puede cambiar el sentido drásticamente, es decir no se puede pasar del estado North a South de un solo, este módulo también controla este tipo de restricciones. Esto último se implementa de la siguiente manera:
+
+\begin{lstlisting}
+if(rUserInput == `West && rCurrentHeading != `West && rCurrentHeading != `East)
+			rCurrentHeading = `West;
+
+		else if(rUserInput == `East && rCurrentHeading != `West && rCurrentHeading != `East)
+			rCurrentHeading = `East;
+
+		else if(rUserInput == `North && rCurrentHeading != `North && rCurrentHeading != `South)
+			rCurrentHeading = `North;
+
+		else if(rUserInput == `South && rCurrentHeading != `North && rCurrentHeading != `South)
+			rCurrentHeading = `South;
+		else
+			rCurrentHeading = rCurrentHeading;
+\end{lstlisting}
 
 \subsubsection{SnakeMain}
-
+Este modulo se encarga de solamente intanciar los dos módulos anteriores. Más que todo es por cuestión de orden y facilidad para despulgar.
 
 %%**********************************************************************
 \section{Resultados}
