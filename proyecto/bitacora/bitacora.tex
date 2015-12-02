@@ -30,7 +30,7 @@
 \usepackage{fancyhdr} 
 \pagestyle{fancy}
 \usepackage{lastpage}
-\lhead{Laboratorio 3}
+\lhead{Laboratorio 4 y Proyecto final}
 \chead{}
 \rhead{Bitácora}
 \lfoot{}
@@ -59,23 +59,22 @@ Jose Apú (B10407), Francisco Molina (B14194), \\Marco Montero (A94000), Dennis 
 
 \section{Objetivo General}
 
-Desarrollar el famoso juego de snake y un controlador VGA utilizando una FPGA.\\[0.3 cm] \cite{papilio}
+Desarrollar un controlador VGA utilizando una FPGA y posteriormente en la misma un juego de snake.\\[0.3 cm] \cite{papilio}
 
 \subsection{Objetivos específicos}
 \begin{itemize}
 \item Utilizar los periféricos de la tarjeta de desarrollo.
-\item 
+\item Implementar diferentes módulos para cada parte del juego.
 \item 
 \end{itemize}
 
 %%**********************************************************************
 \section{Implementación}
-
-La implementación se puede separar en: el controlador VGA, el módulo que controla el mundo y el que controla a la serpiente.
+Para la implementación el proyecto se puede separar en 3 módulos: el controlador VGA, el módulo que controla el mundo y el que controla el cuerpo y la cabeza de la serpiente. El controlador de VGA forma parte del laboratorio 4 del curso, consistió en imprimir en pantalla con la FPGA. Los otros 2 módulos forman parte del proyecto final, controlando tanto la lógica del juego como los colores que se quieren imprimir en cada pixel dependiendo de la misma lógica.
 %%**************************************************
 \subsection{Controlador VGA}
 
-Lo primero consistión es desarrollar el controlador VGA. Este módulo se encarga de poder desplegar datos en una pantalla. Se realizó para una configuración de 640x480, para estó se tomaron los valores de la Figura \ref{vga-data}.\\
+En primera instancia se desarrolló un controlador VGA encargado de desplegar datos en una pantalla, de forma que inicialmente se imprimió la pantalla en verde para comprobar su funcionamiento. Esta prueba y el juego se realizaron para una configuración de 640x480, para cuya sincronización se tomó como referencia la figura \ref{vga-data}.\\
 
 \begin{figure}[hbtp]
 \centering
@@ -84,7 +83,7 @@ Lo primero consistión es desarrollar el controlador VGA. Este módulo se encarg
 \label{vga-data}
 \end{figure}
 
-Para este controlador lo importante es definír cuando HSYNC y cuando VSYNC se pone en 0 y cuando no. Para hay que tomar encuenta el diagrama de la Figura \ref{vga-pulse}.\\
+Para este controlador es sumamente importante sincronizar las señales HSYNC y VYNC, verificar cuando se ponen en 0 y en 1, ya que estas controlan el reset vertical y horizontal. Para esto se tomó en cuenta el diagrama de la Figura \ref{vga-pulse}.\\
 
 \begin{figure}[hbtp]
 \centering
@@ -93,7 +92,7 @@ Para este controlador lo importante es definír cuando HSYNC y cuando VSYNC se p
 \label{vga-pulse}
 \end{figure}
 
-Es necesario tener dos contadores, uno para las filas y otro para las columnas. Cuando llegue a un determinado valor cambia el valor de los SYNCs a cero. Además es necesario restaurarlos con valor inicial cero. Esta lógica se puede observar en el siguiente código:\\
+Además es necesario tener dos contadores, uno para las filas y otro para las columnas, de forma que cuando llegue a un determinado valor se resetean el valor de los SYNCs y el de los contadores al valor inicial cero. Esta lógica se puede observar en el siguiente código:\\
 
 \begin{lstlisting}
 assign rowReset = (wRtemp == (WholeVFrame-1))? 1'b1:1'b0;
@@ -105,7 +104,7 @@ assign oVgaHsync = (wCtemp >= (VisibleHArea + FrontHPorch) &&
 wCtemp <= (VisibleHArea + FrontHPorch + SyncHPulse))? 0:1;
 \end{lstlisting}
 
-Por otra parte se ocupa un generador de señales, ya que tiene que trabajar a una frecuencia determinada. Para eso se utilizóun DCM:
+Una vez implementados los contadores, se ocupa un generador de señales, ya que tiene que se ocupa trabajar a una frecuencia determinada. Para eso se utilizó un DCM, de acuerdo con el siguiente código:
 
 \begin{lstlisting}
 DCM_SP # (
@@ -124,13 +123,12 @@ ClockVga (
 )
 \end{lstlisting}
 
-Por último se ocupab los valores RGB, los que definen el color del pixel. Estos datos se controlan con los otros módulos.
+Por último se ocupan los valores RGB, los que definen el color del pixel. Para lo designado en el laboratorio 4, la prueba inicial consistió en únicamente desarrollar el controlador, para la cual se definieron valores fijos para todos los pixeles. Para el juego, estos datos se controlaron con los otros módulos.
 
 
 %%**************************************************
 \subsection{El mundo}
-
-Este módulo define el área de juego, así como la comida que va apareciendo de manera aleatoria. Si bien crear datos aleatorios no es algo trivial, podríamos hablar de generar datos seudoaleatorios. Para esto se utilizó el siguiente código:
+El módulo mundo define el área de juego y la comida que va apareciendo de manera aleatoria. Si bien crear datos aleatorios no es algo trivial, podríamos hablar de generar datos pseudoaleatorios. Para esto se utilizó el siguiente código:
 
 \begin{lstlisting}
 always @(iPixelRow,iPixelCol) 
@@ -142,9 +140,8 @@ begin
 end
 \end{lstlisting}
 
-$X$ y $Y$ toman un valor inicial e irá cambiando indefinidamente con la ecuación anterior. Con estos dos valores de elegi dónde irá la próxima comida cuando se necesite colocar nuevo comida (cada vez que la serpiente se come la comida). Los valores de rLocationXTemp, rLocationYTemp, x, y son número de 8 bits, por lo que nunca será más grande que 256 (el mundo es de 256x256).\\
-
-Entonces para colocar la comida se utiliza el siguiente código (192 y 112 es para centrarlo al área de juego):
+$X$ y $Y$ toman un valor inicial e irá cambiando indefinidamente con la ecuación anterior. Con estos dos valores se elige la posición de la próxima comida cada vez que la serpiente se la come. Los valores de rLocationXTemp, rLocationYTemp, $x$, $y$, son números de 8 bits, por lo que nunca serán más grandes de 256 (el mundo es de 256x256) y siempre estarán adentro del área del mundo.\\
+Una vez obtenida la posición aleatoria en un recuadro, se utiliza el siguiente código para colocar la comida, sumando los valores 192 y 112 para centrar este recuadro con el área de juego:
 
 \begin{lstlisting}
 begin
@@ -156,15 +153,15 @@ end
 %%**************************************************
 \subsection{La serpiente}
 
-Este modulo se divide en tres módulos. El primero que genera la serpiente, otro que controla el movimiento y el otro que une estos dos módulos.
+El módulo serpiente se divide en tres submódulos. El primero llamado SnakeIcon genera la serpiente, SnakeMovement se encarga de controlar el movimiento y por último SnakeMain une estos dos módulos.
 
 \subsubsection{SnakeIcon}
 
 La serpiente se forma por un arreglo de cuadros (pixeles). En un inicio cuenta con 25 cuadros y puede llegar a un máximo de 100.\\
 
-Cuando la serpiente se come una comida, el cuadro nuevo adopta el valor del cuadro anterior. Por ejemplo si tengo 30 cuadros, y como comida el cuadro 31 para a ser el cuadro 30, el 30 pasa hacer 29 hasta llegar al cuadro cero que toma e valor de la comida.\\
+Cuando la serpiente come, el cuadro nuevo adopta el valor del cuadro anterior. De forma que si al comer, la serpiente actualmente es de 30 cuadros, el cuadro 31 pasa a ser el cuadro 30, el 30 pasa hacer el 29 y así sucesivamente hasta llegar al cuadro cero que toma el valor de la comida.\\
 
-Este módulo también se encarga de verificar si uno pierde la partida, ya sea si se tocó así mismo o toco una pared.
+Este submódulo también se encarga de verificar si uno pierde la partida, ya sea si se tocó así mismo o toco una pared.
 
 \begin{lstlisting}
 //Cuando toca una pared
@@ -188,7 +185,7 @@ Este módulo también se encarga de verificar si uno pierde la partida, ya sea s
 \end{lstlisting}
 		 
 \subsubsection{SnakeMovement}
-Este módulo se encarga de cambiar el estado de dirección. Esta North, South, West, East. Estos estados se cambian al darle click a cualquier de las cuatro botones de la papilio. Por ejemplo si se da click al boton de arriba el estado cambia a North, si estaba en North lo mantiene.
+Este submódulo se encarga de cambiar el estado de dirección ya sea North, South, West o East. Estos estados se cambian al darle click a cualquiera de los cuatro botones de la papilio. Por ejemplo si se da click al boton de arriba el estado cambia a North, si estaba en North lo mantiene.
 
 \begin{lstlisting}
 always @(*)
@@ -206,7 +203,7 @@ begin
 end
 \end{lstlisting}
 
-También controla la velocidad y lo más importante, el movimiento. Dependiendo del estado va agrendando un más uno dependiendo del estado de dirección que esté. Importante aclarar que no se puede cambiar el sentido drásticamente, es decir no se puede pasar del estado North a South de un solo, este módulo también controla este tipo de restricciones. Esto último se implementa de la siguiente manera:
+Adicionalmente se controla la velocidad y lo más importante, el movimiento. Dependiendo del estado con cada nivel se va agregando velocidad a la serpiente. Es importante aclarar que no se puede cambiar el sentido drásticamente, es decir no se puede pasar del estado North a South en un mismo movimiento, por lo que también se controla este tipo de restricciones. Esto último se implementa de la siguiente manera:
 
 \begin{lstlisting}
 if(rUserInput == `West && rCurrentHeading != `West && rCurrentHeading != `East)
@@ -225,7 +222,7 @@ if(rUserInput == `West && rCurrentHeading != `West && rCurrentHeading != `East)
 \end{lstlisting}
 
 \subsubsection{SnakeMain}
-Este modulo se encarga de solamente intanciar los dos módulos anteriores. Más que todo es por cuestión de orden y facilidad para despulgar.
+Este submódulo se encarga de instanciar los dos anteriores, por cuestión de orden y facilidad para despulgar.
 
 %%**********************************************************************
 \section{Resultados}
@@ -252,14 +249,15 @@ Este modulo se encarga de solamente intanciar los dos módulos anteriores. Más 
 \end{figure}
 
 %%**********************************************************************
-\section{Discución}
-Hablar de la comida que se salia del mapa
-numero aleatorios
-dificultad de hacer la serpiente mas grande (q agarre mas pixeles)
+\section{Discusión}
+En cuanto al módulo de controlador de VGA el principal problema fue la sincronización de las señales Hsync y Vsync. Ya que para que la pantalla reconozca la comunicación se necesita "hablar" con la misma de forma que las señales cumplan la temporización respectiva. \\
+Para el desarrollo del juego, una vez implementado, se notó que la posición de la comida aparecía algunas veces fuera del rango del mundo, esto ya que no se había centrado el recuadro para calzar con el área de juego, lo cuál arregló el bug.\\
+Como futuras recomendaciones, al ser la serpiente de un pixel de grosor, es díficil para el usuario el control de misma, de forma que se propone ensanchar la serpiente para tener una mejor experiencia de juego. 
 %%**********************************************************************
 \section{Conlusiones}
-recomendaciones
-que se implemento y que no
+Desarrollar un proyecto conlleva una mayor dificultad que un laboratorio, para interés del curso se cumplió con las expectativas y los objetivos planteados, ampliando los conocimientos teóricos y prácticos en cuanto a la materia de circuitos digitales. El realizar el juego snake no sólo consistió en la aplicación de los laboratorios anteriores, sino también en la implementación como equipo de una estrategia de modularización para conllevar un proyecto en conjunto, desarrollando el código paso a paso y arreglando basados en aportes de cada uno los diferentes problemas como la sincronización de las señales y la posición aleatoria de la comida. \\
+Realizar en una FPGA proyectos a nivel académico aporta sumamente al entendimiento de los circuitos digitales, así como a su aplicación en la vida real y la forma en que se han desarrollado proyectos a nivel comercial.
+
 %%**********************************************************************
 \bibliography{bitacora}
 \bibliographystyle{abbrv}
