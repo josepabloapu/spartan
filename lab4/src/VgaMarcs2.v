@@ -82,7 +82,9 @@ assign oVgaHsync = (colCurrent >= 1048 && colCurrent <= 1184)? 0:1;
 
 
 //Desplega la pantalla en blanco.
-assign {oVgaRed,oVgaGreen,oVgaBlue} = (colCurrent < 1024 && rowCurrent < 768)? `COLOR_WHITE:`COLOR_BLACK;
+assign {oVgaRed,oVgaGreen,oVgaBlue} = ( (colCurrent < 612 && colCurrent > 412) || (rowCurrent < 484 && rowCurrent > 584) ) ? `COLOR_RED:`COLOR_BLACK;
+
+// assign {oVgaRed,oVgaGreen,oVgaBlue} = (rowCurrent < 484 && rowCurrent > 584)? `COLOR_RED:`COLOR_BLACK;
 
 
 // **************************************************

@@ -1,6 +1,0 @@
-verilog work "../src/VgaController.v"
-verilog work "../src/SnakeWorld.v"
-verilog work "../src/SnakeMovement.v"
-verilog work "../src/SnakeIcon.v"
-verilog work "../src/Colores.v"
-verilog work "../src/SnakeMain.v"

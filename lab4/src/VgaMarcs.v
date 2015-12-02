@@ -26,6 +26,18 @@
 // Whole frame	806	16.6656
 // **************************************************
 
+
+parameter Visible_area	1024	
+parameter Front_porch	24		
+parameter Sync_pulse	136		
+parameter Back_porch	160		
+parameter Whole_line	1344
+parameter Visible_area	768	
+parameter Front_porch	3	
+parameter Sync_pulse	6	
+parameter Back_porch	29	
+parameter Whole_frame	806	
+
 `timescale 1ns / 1ps
 `include "Collaterals.v"
 
